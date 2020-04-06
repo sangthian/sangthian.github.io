@@ -1,0 +1,389 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title>Linux基本命令</title>
+    <url>/2020/03/14/Linux%E5%9F%BA%E6%9C%AC%E5%91%BD%E4%BB%A4/</url>
+    <content><![CDATA[<h2 id="系统操作命令"><a href="#系统操作命令" class="headerlink" title="系统操作命令"></a>系统操作命令</h2><ul>
+<li><code>startx</code>: 启动X window界面。 - P115</li>
+<li><code>exit</code>: 注销Linux，并非关机而是离开系统。同时，这个命令也是退出远程登录界面的命令，可以用于退出root用户，可以用于关闭当前终端。 - P117</li>
+<li><code>data</code>: 显示日期与时间。 - P118  <a id="more"></a></li>
+<li><code>cal</code>: 显示日历。 - P118</li>
+<li><code>bc</code>: 计算器软件。 - P120</li>
+<li><code>man</code>: 求助功能。 - P122</li>
+<li><code>info</code>: 求助功能。 - P128</li>
+<li><code>who</code>: 用于查询当前有谁在线。 - P131</li>
+<li><code>netstat</code>: 用于查询当前网络状态。 - P131  </li>
+<li><code>ps -aux</code>: 用于查询当前后台执行程序情况。 - P131</li>
+<li><code>shutdown</code>: 关机。 - P131</li>
+<li><code>reboot</code>: 重启。 - P132</li>
+<li><code>halt</code>: 关机。 - P132</li>
+<li><code>poweroff</code>: 关机。 - P132</li>
+<li><code>sync</code>: 数据同步写入磁盘，正常关机时关机命令会调用这条指令。 - P132</li>
+<li><code>init</code>: 切换执行等级。 - P133</li>
+</ul>
+<h2 id="文件与目录管理"><a href="#文件与目录管理" class="headerlink" title="文件与目录管理"></a>文件与目录管理</h2><h3 id="基础指令"><a href="#基础指令" class="headerlink" title="基础指令"></a>基础指令</h3><ul>
+<li><code>ls</code>: 显示文件的文件名与相关属性(list)。常用参数：-a 显示所有文件，包括隐藏文件；-l 显示文件详细信息，包括文件属性与权限，修改时间等。 - P167</li>
+<li><code>chgrp</code>: 改变文件或目录的所属用户组(change group)。常用参数：-R 进行递归的持续更改，即更改当前目录与下级所有子目录与文件的所属用户组。 - P144</li>
+<li><code>chown</code>: 改变文件或目录的所有者(change owner)。常用参数：-R 进行递归的持续更改。 - P145</li>
+<li><code>chmod</code>: 改变文件或目录权限。常用参数：-R 进行递归的持续更改。 -P146</li>
+<li><code>cp</code>: 复制命令(copy)。常用参数：<code>-i</code>互动，当目标文件以及存在时，在覆盖前询问操作是否进行；<code>-r</code>递归持续复制，用于复制目录；<code>-p</code>连同文件的属性一起复制，而不是使用默认属性；<code>-u</code>若被复制源文件比目标文件新才会复制 - P169</li>
+<li><code>rm</code>: 移除文件或目录(remove)。参数：<code>-r</code>递归删除，会删除掉整个目录（不管是否为空）；<code>-i</code>互动，会在删除前提示是否需要操作。 - P171</li>
+<li><code>mv</code>: 移动文件与目录、或重命名文件(move)。参数：<code>-i</code>互动，如果目标已经存在，则询问是否需要覆盖；<code>-u</code>若目标已经存在，且比被移动源文件旧，才会覆盖。 - P172</li>
+<li><code>cd</code>: 切换目录(change directory)。常用命令：<code>cd -</code> 回到刚才的目录；<code>cd ~</code>回到自己的主文件夹，同<code>cd</code>；<code>cd ..</code>回到上层路径；<code>cd /</code>回到根目录。- P163</li>
+<li><code>pwd</code>: 显示目前所在的目录(print working directory)。常用参数：<code>-P</code>显示出当前路径，而非使用连接路径。 - P164</li>
+<li><code>mkdir</code>: 新建新目录(make directory)。参数：<code>-p</code>创建多级目录；<code>-m</code>给予新目录权限。 - P164</li>
+<li><code>rmdir</code>: 删除“空”目录(remove directory)，注意只能是空目录。 - P165</li>
+</ul>
+<h3 id="文件内容查阅"><a href="#文件内容查阅" class="headerlink" title="文件内容查阅"></a>文件内容查阅</h3><ul>
+<li><code>cat</code>: 查看一个文件的内容(concatenate)。参数：<code>-n</code>打印出行号，连同空白行也会有行号；<code>-b</code>打印出行号，空白行没有行号；<code>-A</code>可以显示出来一些特殊字符，而不是空白。 - P173</li>
+<li><code>tac</code>: 反向列出一个文件的内容，从最后一行到第一行。 - P174</li>
+<li><code>nl</code>: 添加行号打印。 - P174</li>
+<li><code>more</code>: 翻页命令。指令：<code>[Space]</code>向下翻一页；<code>[Enter]</code>向下翻一行；<code>/字符串</code>向下查询该字符串；<code>q</code>离开more；<code>b</code>往上翻页；<code>n</code>查询过程中查询下一条。 - P175</li>
+<li><code>less</code>: 翻页命令，比more人性化。指令：<code>[Space]</code>向下翻一页；<code>[PageDown]</code>向下翻动一页；<code>[PageUp]</code>向上翻动一页；<code>/字符串</code>向下查询该字符串；<code>?字符串</code>向上查询该字符串；<code>n</code>重复查询；<code>N</code>重复查询，与n相反；<code>q</code>离开less。 - P176</li>
+<li><code>head</code>: 取出前边几行。参数：<code>-n</code>后边接数字，代表取出几行。 - P176</li>
+<li><code>tail</code>: 取出后边几行。参数：<code>-n</code>后边接数字，代表取出最后几行。 - P177</li>
+<li><code>od</code>: 读取非纯文本文件。参数：<code>-t</code>后边可以接各种类型的输出。 - P177</li>
+<li><code>touch</code>: 修改文件时间或创建新文件。 -P180</li>
+</ul>
+<h3 id="文件默认权限与隐藏属性"><a href="#文件默认权限与隐藏属性" class="headerlink" title="文件默认权限与隐藏属性"></a>文件默认权限与隐藏属性</h3><ul>
+<li><code>umask</code>: 查看和修改系统默认文件权限。参数：<code>-S</code>将权限以符号形式显示。 - P181</li>
+<li><code>chattr</code>: 设置文件的隐藏属性。 - P183</li>
+<li><code>lsattr</code>: 显示文件的隐藏属性。 - P184</li>
+<li><code>file</code>: 查看文件类型。 - P187</li>
+</ul>
+<h3 id="命令与文件的查询"><a href="#命令与文件的查询" class="headerlink" title="命令与文件的查询"></a>命令与文件的查询</h3><ul>
+<li><code>which</code>: 寻找执行文件。 参数：<code>-a</code>将所有在PATH中可以找到的该命令均列出来，而不是找到的第一条。 - P187</li>
+<li><code>whereis</code>: 寻找特定文件，通过数据库查询，所以速度快，但并不是所有文件都在数据库中注册，刚新建的文件可能还没有在数据库中注册，刚删除的文件也不会立即从数据库中消失。 - P188</li>
+<li><code>locate</code>: 寻找特定文件，与whereis不同的是，可以输入部分文件名查找包含这部分名称的所有文件，与whereis相同，也是查询数据库。</li>
+<li><code>updatedb</code>: 可以用来更新数据库。 - P189</li>
+<li><code>find</code>: 寻找特定文件，该命令是在硬盘里查找所有文件，所以耗时长。参数比较多，请查阅原文。 - P189</li>
+</ul>
+<h2 id="磁盘与文件系统管理"><a href="#磁盘与文件系统管理" class="headerlink" title="磁盘与文件系统管理"></a>磁盘与文件系统管理</h2><h3 id="磁盘与目录容量"><a href="#磁盘与目录容量" class="headerlink" title="磁盘与目录容量"></a>磁盘与目录容量</h3><ul>
+<li><code>df</code>: 列出文件系统的整体磁盘使用量。重要参数：<code>-h</code>以人类较易阅读的存储单位显示容量；<code>-i</code>不用硬盘容量而是用inode数量显示；<code>-a</code>列出所有文件系统；<code>-T</code>将该分区的文件系统名称一并列出。 - P210</li>
+<li><code>du</code>: 评估文件系统的磁盘使用量。重要参数：<code>-s</code>仅列出总量，而不列出每个个别目录的占用容量。 - P212</li>
+</ul>
+<h3 id="连接文件"><a href="#连接文件" class="headerlink" title="连接文件"></a>连接文件</h3><ul>
+<li><code>ln</code>: 设置连接文件。重要参数：<code>-s</code>添加该参数意味着进行symbolic link，而不添加参数意味着进行hard link。</li>
+</ul>
+<h3 id="磁盘的分区、格式化、检验与挂载"><a href="#磁盘的分区、格式化、检验与挂载" class="headerlink" title="磁盘的分区、格式化、检验与挂载"></a>磁盘的分区、格式化、检验与挂载</h3><ul>
+<li><code>fdisk</code>: 程序，磁盘分区工具。重要命令：<code>d</code>删除一个分区；<code>n</code>增加一个新分区；<code>p</code>在屏幕上显示分区；<code>q</code>退出程序并不保存；<code>w</code>退出程序并保存（将之前的设置写入分区表）。 - P217</li>
+<li><code>mkfs</code>: 格式化命令，它会调用正确的文件系统格式化工具软件。参数：<code>-t</code>可以接文件系统格式。 - P223</li>
+<li><code>mke2fs</code>: 了解EXT2/EXT3的公用程序。 - P224</li>
+<li><code>fsck</code>: 磁盘检验命令(file system check)，检查修正文件系统错误。执行该命令时，被检查的分区务必不可挂载到系统上，即需要在卸载的状态下。 - P225</li>
+<li><code>badblocks</code>: 检查硬盘扇区是否有坏轨。 - P226</li>
+<li><code>mount</code>: 挂载命令。 - P227</li>
+<li><code>umount</code>: 卸载命令。 - P230</li>
+<li><code>mknod</code>: 设置磁盘参数。 - P231</li>
+<li><code>e2lable</code>: 修改磁盘卷标。 - P232</li>
+<li><code>tune2fs</code>: 更新磁盘格式。 - P232</li>
+<li><code>hdparm</code>: IDE硬盘参数设置。 - P233</li>
+</ul>
+<h2 id="文件压缩与打包"><a href="#文件压缩与打包" class="headerlink" title="文件压缩与打包"></a>文件压缩与打包</h2><h3 id="压缩指令"><a href="#压缩指令" class="headerlink" title="压缩指令"></a>压缩指令</h3><ul>
+<li><code>compress</code>: 比较老旧的一款压缩软件，处理<code>.Z</code>型压缩文件，现在不常用。 - P251</li>
+<li><code>uncompress</code>: 对应的解压缩。 - P251</li>
+<li><code>gzip</code>: 应用比较广泛，处理<code>.gz</code>型压缩文件。参数：<code>-c</code>将压缩数据输出到屏幕，也可通过数据流重定向；<code>-d</code>解压缩命令；<code>-v</code>显示压缩信息；<code>-#</code>压缩等级，#可取1到9，1最快，默认为6。 - P252</li>
+<li><code>gunzip</code>: 对应的解压缩软件，与命令<code>gzip -d abc.gz</code>相同。 - P252</li>
+<li><code>zcat</code>: 查看<code>.gz</code>压缩格式的文件内容，直接打开cat。 - P252</li>
+<li><code>bzip2</code>: 应用比较广泛，压缩率比<code>gzip</code>高，处理<code>.bz</code> <code>.bz2</code> <code>.tbz</code> <code>.tbz2</code>型压缩文件。参数：<code>-c</code>将压缩数据输出到屏幕，也可通过数据流重定向；<code>-d</code>解压缩命令；<code>-k</code>保留源文件而不会删除源文件；<code>-v</code>显示压缩信息；<code>-#</code>压缩等级，#可取1到9，同上。 - P253</li>
+<li><code>bunzip2</code>: 对应的解压缩软件，与命令<code>bzip2 -d abc.bz2</code>相同。 - P253</li>
+<li><code>bzcat</code>: 查看<code>.bz2</code>等压缩格式的文件内容，直接打开cat。 - P253</li>
+</ul>
+<h3 id="打包指令"><a href="#打包指令" class="headerlink" title="打包指令"></a>打包指令</h3><ul>
+<li><code>tar</code>: 打包命令，将多个文件打包成一个文件后压缩，参数比较多，请参见原文。常见指令：<code>tar -jcv -f abc.tar.bz2 abc/</code>压缩abc目录到abc.tar.bz2；<code>tar -jtv -f abc.tar.bz2</code>查看该压缩打包文件中有哪些文件名；<code>tar -jxv -f abc.tar.gz2 -C abc/</code>将abc.tar.gz2解压到目录abc/中。 - P254</li>
+</ul>
+<h3 id="备份指令"><a href="#备份指令" class="headerlink" title="备份指令"></a>备份指令</h3><ul>
+<li><code>dump</code>: 备份文件系统。参数：<code>-u</code>将该次备份时间记录到/etc/dumpdateS文件中；<code>-v</code>显示详细信息；<code>-j</code>加入bzip2支持，将备份数据压缩，默认等级为2；<code>-level</code>等级。 - P260</li>
+<li><code>restore</code>: 对应的恢复指令。参数：<code>-t</code>查看备份文件数据；<code>-C</code>比较备份数据与实际文件；<code>-i</code>互动模式。 - P262</li>
+</ul>
+<h3 id="光盘写入工具"><a href="#光盘写入工具" class="headerlink" title="光盘写入工具"></a>光盘写入工具</h3><ul>
+<li><code>mkisofs</code>: 将文件制作成iso格式镜像文件。 - P265</li>
+<li><code>cdrecord</code>: 光盘刻录工具，可以刻录到光盘。 - P267</li>
+</ul>
+<h3 id="其他压缩与备份工具"><a href="#其他压缩与备份工具" class="headerlink" title="其他压缩与备份工具"></a>其他压缩与备份工具</h3><ul>
+<li><code>dd</code>: 读取磁盘设备内容并备份，备份整块分区或磁盘，参数比较多，请参见原文。 - P269</li>
+<li><code>cpio</code>: 可以备份任何东西，但需要配合find来找到文件名，详细使用情况见原文。 - P270</li>
+</ul>
+<h2 id="文本编辑"><a href="#文本编辑" class="headerlink" title="文本编辑"></a>文本编辑</h2><ul>
+<li><code>LANG=zh_CN.big5</code>: 修正终端语系为big5编码。另外还有gb2312、tfg8编码。 - P290</li>
+<li><code>dos2UNIX</code>: 格式转换命令，将DOS格式的文件转换为UNIX格式文件。参数：<code>-k</code>保留该文件原本的mtime时间格式；<code>-n</code>保留原格式的文件，将转换的文件输出到新内容，需要加新文件名。 - P290</li>
+<li><code>UNIX2dos</code>: 格式转换命令，将UNIX格式的文件转换为DOS格式文件。参数同<code>dos2UNIX</code>。 - P290</li>
+<li><code>iconv</code>: 格式转换指令，可以选择转换成支持的任何格式。参数：<code>--list</code>列出所有支持的格式；<code>-f</code>后接源文件的编码格式；<code>-t</code>后接新的要转换的编码格式；<code>-o</code>如果需要保留源文件，用该参数后接新文件名，可以新建编码文件。 - P291</li>
+</ul>
+<h2 id="认识与学习bash"><a href="#认识与学习bash" class="headerlink" title="认识与学习bash"></a>认识与学习bash</h2><h3 id="bash内置命令"><a href="#bash内置命令" class="headerlink" title="bash内置命令"></a>bash内置命令</h3><ul>
+<li><code>type [-tpa] name</code>: 可以查看某个命令是外部命令还是内部命令。参数：<code>-t</code>显示命令的意义。 - P298</li>
+</ul>
+<h3 id="shell的变量功能"><a href="#shell的变量功能" class="headerlink" title="shell的变量功能"></a>shell的变量功能</h3><ul>
+<li><code>echo $variable</code>: 可以查看变量内容，对于该变量的使用特别灵活，请逐步摸索。 - P300 -P313</li>
+<li><code>unset name</code>: 取消刚才设置的name变量。 - P303</li>
+<li><code>env</code>: 列出所有环境变量与常见环境变量说明。 - P304</li>
+<li><code>set</code>: 查看所有变量，包括环境变量与自定义变量。 - P305</li>
+<li><code>export variable</code>:　将variable自定义变量变成环境变量，另外，如果不接任何变量使用export，则会把所有环境变量显示出来。 - P308</li>
+<li><code>locale [-a]</code>: 查看语系变量。参数<code>-a</code>显示所有语系变量。 - P308</li>
+<li><code>read [-pt] variable</code>: 读取来自键盘输入的变量。参数：<code>-p</code>在输入光标前显示可以设置的提示内容，提示内容接到参数后边；<code>-t</code>设置读取等待时间，单位秒，等待时间之后跳过该次读取。 - P310</li>
+<li><code>declare [-aixr] variable</code>: 声明变量的类型，如果不接任何参数，则显示所有变量名称和内容。参数：<code>-a</code>将后面名为variable的变量定义为数组类型，默认变量是字符串类型；<code>-i</code>定义为整数数字类型；<code>-x</code>将variable变成环境变量，同export；<code>-r</code>将变量设置为readonly类型，该变量不可更改内容，也不能重设。 - P311</li>
+<li><code>ulimit [-SHacdfltu] [配额]</code>: 用于限定用户可使用的系统资源。变量过多，请查阅原文。 - P316</li>
+</ul>
+<h3 id="命令别名与历史命令"><a href="#命令别名与历史命令" class="headerlink" title="命令别名与历史命令"></a>命令别名与历史命令</h3><ul>
+<li><code>alias 命令别名=命令序列</code>: 可以用命令别名取代比较长的命令序列串。 - P317</li>
+<li><code>unalias 命令别名</code>: 取消命令别名。 - P318</li>
+<li><code>history [n/-c/-raw histfiles]</code>: 历史命令。参数：<code>n</code>列出最近几行命令；<code>-c</code>将当前shell中的所有历史命令列出；<code>-a</code>将新增的命令加入到histfiles文件中，若没有histfiles，则默认写入到/.bash_history；<code>-r</code>将histfiles的内容读入当前这个shell的history记忆中；<code>-w</code>将当前history的记忆写入到histfiles中。 - P318</li>
+</ul>
+<h3 id="bash-shell操作环境"><a href="#bash-shell操作环境" class="headerlink" title="bash shell操作环境"></a>bash shell操作环境</h3><ul>
+<li><code>source 配置文件名</code>: 可以将配置文件的内容读入到目前的shell环境中，而不需要在更改了shell之后重新注销再登录。 - P324</li>
+<li><code>stty [-a]</code>: 查看终端机输入按键代表的意义。参数：<code>-a</code>将目前所有的stty参数列出来。 - P325</li>
+<li><code>set [-vcCHhmBx]</code>: 设置一些变量，配置输入输出环境等。参数比较多，请查阅原文。 - P326</li>
+</ul>
+<h3 id="数据流重定向"><a href="#数据流重定向" class="headerlink" title="数据流重定向"></a>数据流重定向</h3><ul>
+<li><code>cmd1 ; cmd2</code>: 通过<code>;</code>来连接两个命令，代表不需要考虑命令相关性的连续命令执行。 - P332</li>
+<li><code>cmd1 &amp;&amp; cmd2</code>: 通过<code>&amp;&amp;</code>来连接两个命令，代表考虑相关性，并且cmd1正确执行则cmd2才执行，cmd1错误则不执行cmd2。 - P332</li>
+<li><code>cmd1 || cmd2</code>: 通过<code>||</code>来连接两个命令，代表考虑相关性，并且cmd1正确执行则cmd2不执行，cmd1错误则cmd2执行。 - P332</li>
+</ul>
+<h3 id="管道命令（pipe"><a href="#管道命令（pipe" class="headerlink" title="管道命令（pipe)"></a>管道命令（pipe)</h3><ul>
+<li><code>cmd1 | cmd2</code>: 通过<code>|</code>来实现管道命令，需要注意的是，每个管道后面接的第一个数据必须是命令，而且这个命令必须是能够接收stdin的数据才行，管道对stderr没有直接处理的能力。 - P334</li>
+<li><code>cut -d &#39;分隔字符&#39; -f fields</code>或<code>cut -c 字符范围</code>: 用于使用<code>分隔字符</code>来分隔文段字符；后者用于排列整齐的信息。 - P335</li>
+<li><code>grep [-acinv] [--color=auto] &#39;查找字符串&#39; filename</code>: 分析一行信息，若当中有我们所需要的信息，就将该行拿出来。参数：<code>-a</code>将binary文件以text文件的方式查找数据；<code>-c</code>计算找到’查找字符串’的次数；<code>-i</code>忽略大小写的不同；<code>-n</code>顺便输出行号；<code>-v</code>反向选择，显示不包括’查找字符串’内容的那一行；<code>--color=auto</code>将找到行的关键词加颜色显示。 - P336</li>
+<li><code>sort [-fbMnrtuk] [file or stdin]</code>: 用于排序，可以依据不同的数据类型排序。参数比较多，请查阅原文。 - P336</li>
+<li><code>uniq [-ic]</code>: 将排序后重复的数据仅列出一个显示。参数：<code>-i</code>忽略大小写字符；<code>-c</code>进行计数。 -P337</li>
+<li><code>wc [-lwm]</code>: 计算输出的信息的整体数据量。参数：<code>-l</code>仅列出列数；<code>-w</code>仅列出字数；<code>-m</code>列出多少字符。 - P337</li>
+<li><code>tee [-a] file</code>: 双向重定向。参数：<code>-a</code>以累加的方式，将数据加入到file文件中。就是同时写入到文件也可以打印到屏幕。 -P338</li>
+<li><code>tr [-ds] set1 ...</code>: 可以用来删除一段信息中的文字，或进行文字信息的替换。参数：<code>-d</code>删除信息中的set1等字符串；<code>-s</code>替换掉重复的字符串。 - P338</li>
+<li><code>col [-xb]</code>: 具有和tr类似的功能，此外，col经常被用来利用于将man page转存成纯文本格式文件以方便查阅。参数：<code>-x</code>将TAB键换成对等的空格键；<code>-b</code>将文字内有反斜杠/时，仅保留反斜杠最后接的那个字符。 - P339</li>
+<li><code>join [-ti12] file1 file2</code>: 主要用于将两个文件当中有相同数据的那一行加起来。参数不聊，请查阅原文。 - P340</li>
+<li><code>paste [-d] file1 file2</code>: join必须要对比两个文件的相关性，但是paste就是直接将两行贴在一起，且中间用TAB键隔开。参数：<code>-d</code>后面接分隔字符，默认以TAB键隔开。 - P341</li>
+<li><code>expand [-t] file</code>: 就是将TAB键转成空格键。参数：<code>-t</code>后面接数字，设定一个TAB替换成几个空格。 - P431</li>
+<li><code>split [-bl] file PREFIX</code>: 可以将一个大文件依据文件大小或行数来切割成小文件。参数：<code>-b</code>后面可以接切割成的文件大小，可加单位；<code>-l</code>以行数来切割。 - P342</li>
+<li><code>xargs [-0epn] command</code>: 产生某个命令的参数。参数不聊，请查阅原文。 - P342</li>
+</ul>
+<h2 id="程序管理和SELinux初探"><a href="#程序管理和SELinux初探" class="headerlink" title="程序管理和SELinux初探"></a>程序管理和SELinux初探</h2><h3 id="工作管理"><a href="#工作管理" class="headerlink" title="工作管理"></a>工作管理</h3><ul>
+<li><code>jobs</code> ：查看目前的后台工作状态。参数：<code>-l</code> 同时列出PID号码；<code>-r</code> 仅列出正在后台的工作；<code>-s</code> 仅列出在后台中暂停的工作。-p513</li>
+<li><code>fg %jobnum</code> ：将后台工作拿到前台来处理。参数：<code>jobnum</code> 工作号码，一个数字。-p513</li>
+<li><code>bg %jobnum</code> ：让工作在后台的状态变成前台运行。-p513</li>
+</ul>
+<h3 id="进程管理"><a href="#进程管理" class="headerlink" title="进程管理"></a>进程管理</h3><ul>
+<li><code>ps</code>：报告当前系统的进程状态，选项多得离谱。常用参数：<code>-l</code> 列出仅和当前bash相关的进程；<code>aux</code> 列出目前所有在内存中的进程。-p516</li>
+<li><code>top</code> ：动态查看进程变化。参数：<code>-d</code> 后面接数字，表示刷新时间，按秒来计算。-p518</li>
+<li><code>pstree</code> ：查看进程相关性。参数：<code>-A</code> 进程树以ASCII字符连接；<code>-p</code> 同时列出每个进程的PID；<code>-u</code> 同时列出每个进程所属的账号名称。-p520</li>
+<li><code>kill [-signal] PID</code> ：给进程一个命令，管理进程。参数：<code>-9</code> 强制关闭；<code>-1</code> 重启进程；<code>-2</code> 中断进程（ctrl-c）；<code>-i</code> 交互，操作前会有提示。-p522</li>
+<li><code>free</code> ：查看内存使用情况。参数：<code>-b|-k|-m|-g</code> 存储单位，从Bite到GB。-p525</li>
+<li><code>uname</code> ：查看系统和内核相关信息。参数：<code>-a</code> 所有系统相关信息都会列出。-p526</li>
+<li><code>upname</code> 查看系统启动时间和工作负载。-p526</li>
+<li><code>netstat</code> ：跟踪网络，列出系统网络连接状态。参数：<code>-a</code> 将系统中所有连接显示出来。-p527</li>
+<li><code>dmesg</code> ：分析内核产生的信息。-p528</li>
+<li><code>vmstat [delay] [num]</code> ：检测系统资源变化。参数：<code>-a</code> 列出cpu和内存等信息；<code>delay</code> 延迟刷新时间；<code>num</code> 总计检测次数。-p528</li>
+</ul>
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>Linux</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Spring基础(2)-IOC理论推导和本质</title>
+    <url>/2020/04/05/Spring%E5%9F%BA%E7%A1%80(2)-IOC%E7%90%86%E8%AE%BA%E6%8E%A8%E5%AF%BC%E5%92%8C%E6%9C%AC%E8%B4%A8/</url>
+    <content><![CDATA[<h2 id="案例分析"><a href="#案例分析" class="headerlink" title="案例分析"></a>案例分析</h2><p>使用maven新建一个项目</p>
+<ul>
+<li>添加一个UserDao接口：</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">UserDao</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">getUser</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>实现这个UserDao接口：<a id="more"></a></li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserDaoImpl</span> <span class="keyword">implements</span> <span class="title">UserDao</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">getUser</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"获取用户数据"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>添加一个UserService接口：</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">UserService</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">getUser</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>实现这个UserService接口：</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserServiceImpl</span> <span class="keyword">implements</span> <span class="title">UserService</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> UserDao userDao = <span class="keyword">new</span> UserDaoImpl(); </span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">getUser</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        userDao.getUser(); <span class="comment">// 调用Dao层方法</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>编写测试类，模拟controller：</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">  	UserService service = <span class="keyword">new</span> UserServiceImpl();</span><br><span class="line">    service.getUser();</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// print "获取用户数据"</span></span><br></pre></td></tr></table></figure>
+
+<p>现在如果UserDao的实现类增加一个，比如叫<code>UserDaoMySqlImpl</code>：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserDaoMySqlImpl</span> <span class="keyword">implements</span> <span class="title">UserDao</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">getUser</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"获取MySql用户数据"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>紧接着我们要去使用MySql的话 , 我们就需要去UserService实现类里面修改对应的实现 :</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserServiceImpl</span> <span class="keyword">implements</span> <span class="title">UserService</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> UserDao userDao = <span class="keyword">new</span> UserDaoMySqlImpl();  <span class="comment">// 修改实例对象</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">getUser</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        userDao.getUser(); <span class="comment">// 调用Dao层方法</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果还有更多类似的需求，那么代码改动量将会很大，因此 这种设计的耦合性太高了，牵一发而动全身 ，不适合快速变化的业务系统。</p>
+<h2 id="方法改进"><a href="#方法改进" class="headerlink" title="方法改进"></a>方法改进</h2><p>UserService的实现类不是直接去New一个新的实例，而是留出set接口，让调用者决定选择哪个具体的Dao实现，当然这其中有多态的思想在里面：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserServiceImpl</span> <span class="keyword">implements</span> <span class="title">UserService</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> UserDao userDao;</span><br><span class="line">    <span class="comment">// 利用set方法实现</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setUserDao</span><span class="params">(UserDao userDao)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.userDao = userDao;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">getUser</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        userDao.getUser();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>现在再使用测试类：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">  	UserService service = <span class="keyword">new</span> UserServiceImpl();</span><br><span class="line">    service.setUserDao(<span class="keyword">new</span> UserDaoMySqlImpl());</span><br><span class="line">    service.getUser();</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// print "获取MySql用户数据"</span></span><br></pre></td></tr></table></figure>
+
+<p>虽然只是一个简单的例子，但其中包含的设计思想确实比较高级的：</p>
+<ul>
+<li>以前所有东西都是由程序去进行控制创建</li>
+<li>而现在使用了set注入，主动权交给了调用者</li>
+<li>程序不用去管怎么创建，而是专注于业务逻辑的实现，耦合性大大降低 . 这也就是IOC的原型 。</li>
+</ul>
+<h2 id="IOC本质"><a href="#IOC本质" class="headerlink" title="IOC本质"></a>IOC本质</h2><p><img src="https://cdn.jsdelivr.net/gh/sangthian/CloudPic@master/uPic/IOC%E7%90%86%E8%AE%BA%E8%83%8C%E6%99%AF.png" alt="IOC理论背景"></p>
+<p><strong>控制反转（IOC）是一种设计思想，依赖注入（DI）是实现IOC的一种方式</strong>。在没有IOC的程序中，我们使用面向对象编程，对象的创建和对象之间的依赖完全硬编码在程序中，对象的创建由程序自己控制，控制反转后对象的创建转移给第三方，也就是“<strong>获得依赖对象的方式反转了</strong>”。</p>
+<h2 id="依赖注入"><a href="#依赖注入" class="headerlink" title="依赖注入"></a>依赖注入</h2><p>IOC的另外的名字叫做依赖注入（Dependency Injection），所谓的依赖注入，就是由IOC容器在运行期间，动态地将某种依赖关系注入到对象之中。所以，依赖注入(DI)和控制反转(IOC)是从不同的角度的描述的同一件事情，<strong>就是指通过引入IOC容器，利用依赖关系注入的方式，实现对象之间的解耦</strong>。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/sangthian/CloudPic@master/uPic/%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5%E7%B1%BB%E6%AF%94.png" alt="依赖注入类比"></p>
+<p>类似上图一样：从外部usb读取文件，主机没必要知道通过啥设备，只要符合连接接口就可以了，外部设备主动权由我们自己控制，这样就解耦到最低。</p>
+]]></content>
+      <categories>
+        <category>Spring</category>
+      </categories>
+      <tags>
+        <tag>Spring</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Spring基础(1)-Spring简介</title>
+    <url>/2020/04/05/Spring%E5%9F%BA%E7%A1%80(1)-Spring%E7%AE%80%E4%BB%8B/</url>
+    <content><![CDATA[<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>文档内容为B站“狂神说Java”课程的笔记，外加自己的个人理解。下面正式开始：</p>
+<p><a href="https://docs.spring.io/spring-framework/docs/current/spring-framework-reference/core.html" target="_blank" rel="noopener">Spring官方文档-En</a></p>
+<ul>
+<li>Spring是一个开源免费的框架（容器）</li>
+<li>Spring是一个轻量级的、非入侵式（不对原代码产生影响）</li>
+<li>控制翻转（IOC），面向切面编程（AOP）</li>
+<li>支持事务处理，对框架的支持</li>
+</ul>
+<a id="more"></a>
+
+<p>总结：Spring是一个轻量级的控制反转（IOC）和面向切面编程（AOP）的框架。</p>
+<h2 id="组成"><a href="#组成" class="headerlink" title="组成"></a>组成</h2><p>Spring 框架是一个分层架构，由 7 个定义良好的模块组成。Spring 模块构建在核心容器之上，核心容器定义了创建、配置和管理 bean 的方式 。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/sangthian/CloudPic@master/uPic/Spring7%E4%B8%AA%E7%BB%84%E6%88%90.png" alt="Spring7个组成"></p>
+<ul>
+<li><strong>核心容器</strong>：核心容器提供 Spring 框架的基本功能。核心容器的主要组件是 <code>BeanFactory</code>，它是工厂模式的实现。<code>BeanFactory</code> 使用控制反转（IOC） 模式将应用程序的配置和依赖性规范与实际的应用程序代码分开。</li>
+<li><strong>Spring 上下文</strong>：Spring 上下文是一个配置文件，向 Spring 框架提供上下文信息。Spring 上下文包括企业服务，例如 JNDI、EJB、电子邮件、国际化、校验和调度功能。</li>
+<li><strong>Spring AOP</strong>：通过配置管理特性，Spring AOP 模块直接将面向切面的编程功能 , 集成到了 Spring 框架中。所以，可以很容易地使 Spring 框架管理任何支持 AOP的对象。Spring AOP 模块为基于 Spring 的应用程序中的对象提供了事务管理服务。通过使用 Spring AOP，不用依赖组件，就可以将声明性事务管理集成到应用程序中。</li>
+<li><strong>Spring DAO</strong>：JDBC DAO 抽象层提供了有意义的异常层次结构，可用该结构来管理异常处理和不同数据库供应商抛出的错误消息。异常层次结构简化了错误处理，并且极大地降低了需要编写的异常代码数量（例如打开和关闭连接）。Spring DAO 的面向 JDBC 的异常遵从通用的 DAO 异常层次结构。</li>
+<li><strong>Spring ORM</strong>：Spring 框架插入了若干个 ORM 框架，从而提供了 ORM 的对象关系工具，其中包括 JDO、Hibernate 和 iBatis SQL Map。所有这些都遵从 Spring 的通用事务和 DAO 异常层次结构。</li>
+<li><strong>Spring Web 模块</strong>：Web 上下文模块建立在应用程序上下文模块之上，为基于 Web 的应用程序提供了上下文。所以，Spring 框架支持与 Jakarta Struts 的集成。Web 模块还简化了处理多部分请求以及将请求参数绑定到域对象的工作。</li>
+<li><strong>Spring MVC 框架</strong>：MVC 框架是一个全功能的构建 Web 应用程序的 MVC 实现。通过策略接口，MVC 框架变成为高度可配置的，MVC 容纳了大量视图技术，其中包括 JSP、Velocity、Tiles、iText 和 POI。</li>
+</ul>
+<h2 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h2><img src="https://cdn.jsdelivr.net/gh/sangthian/CloudPic@master/uPic/Spring%20Boot.png" alt="SpringBoot"  />
+
+<ul>
+<li>Spring Boot：一个快速开发的脚手架<ul>
+<li>基于Spring Boot可以快速开发单个微服务</li>
+<li>约定大于配置</li>
+</ul>
+</li>
+<li>Spring Cloud<ul>
+<li>Spring Cloud基于Spring Boot来实现的</li>
+</ul>
+</li>
+<li>Spring Boot专注于快速、方便集成的单个微服务个体，Spring Cloud关注全局的服务治理框架；</li>
+<li>Spring Boot使用了约束优于配置的理念，很多集成方案已经帮你选择好了，能不配置就不配置 , Spring Cloud很大的一部分是基于Spring Boot来实现，Spring Boot可以离开Spring Cloud独立使用开发项目，但是Spring Cloud离不开Spring Boot，属于依赖的关系。</li>
+</ul>
+<p>学习Spring Boot的前提是需要完全掌握Spring及Spring MVC</p>
+<p>弊端：Spring本身发展了太久，违背了原来的理念，配置十分繁琐，但是Spring Boot很好的解决了这个问题。</p>
+]]></content>
+      <categories>
+        <category>Spring</category>
+      </categories>
+      <tags>
+        <tag>Spring</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Spring基础(3)-第一个Spring Demo</title>
+    <url>/2020/04/05/Spring%E5%9F%BA%E7%A1%80-3-%E7%AC%AC%E4%B8%80%E4%B8%AASpring-Demo/</url>
+    <content><![CDATA[<h2 id="Spring-Demo"><a href="#Spring-Demo" class="headerlink" title="Spring Demo"></a>Spring Demo</h2><p>利用maven新建一个空的项目，然后逐步添加Spring相关代码，以最简单的Demo理解Spring的IOC原理。</p>
+<ul>
+<li>添加maven依赖：<a id="more"></a></li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-webmvc<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">version</span>&gt;</span>5.1.10.RELEASE<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>创建<code>com.mx.pojo.Hello</code>类：</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Hello</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> name;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setName</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">show</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"Hello,"</span> + name );</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>编写<code>resources.beans.xml</code>配置文件:</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">beans</span> <span class="attr">xmlns</span>=<span class="string">"http://www.springframework.org/schema/beans"</span></span></span><br><span class="line"><span class="tag">       <span class="attr">xmlns:xsi</span>=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span></span></span><br><span class="line"><span class="tag">       <span class="attr">xsi:schemaLocation</span>=<span class="string">"http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!--使用Spring来创建对象，在Spring中这些对象都称之为Bean--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"hello"</span> <span class="attr">class</span>=<span class="string">"com.mx.pojo.Hello"</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!--类中的属性成员，可以赋初值，通过setter方法--&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"name"</span> <span class="attr">value</span>=<span class="string">"jesse"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">beans</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>编写测试类<code>test.MyTest</code>：</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyTest</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 读取xml配置文件，获取Spring的上下文对象</span></span><br><span class="line">        ApplicationContext context = <span class="keyword">new</span> ClassPathXmlApplicationContext(<span class="string">"beans.xml"</span>);</span><br><span class="line">        <span class="comment">// 根据bean的id选取，获得对象实例</span></span><br><span class="line">        Hello hello = (Hello) context.getBean(<span class="string">"hello"</span>);</span><br><span class="line">        hello.show();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// print "Hello,jesse"</span></span><br></pre></td></tr></table></figure>
+
+<p><code>ClassPathXmlApplicationContext</code>和<code>ApplicationContext</code>存在N次继承关系，是利用多态的向上转型，从类名中可以探知，获取上下文对象的方式除了xml配置之外，还有其他的，比如注解、文件等。</p>
+<h2 id="问题思考"><a href="#问题思考" class="headerlink" title="问题思考"></a>问题思考</h2><ul>
+<li><p>hello对象是谁创建的？</p>
+<ul>
+<li>hello对象是由Spring创建的，程序中没有new</li>
+</ul>
+</li>
+<li><p>hello对象的属性是怎么设置的？   </p>
+<ul>
+<li>hello对象的属性是由Spring容器设置的</li>
+</ul>
+</li>
+</ul>
+<p>这个过程就叫做控制反转：</p>
+<ul>
+<li>控制：谁来控制对象的创建，在使用Spring之后，对象是由Spring来创建</li>
+<li>反转：程序本身不创建对象，变成被动的接受对象</li>
+<li>依赖注入：利用set方法进行注入</li>
+</ul>
+<p>因此对于初级的Spring程序，要实现不同的操作，只需要在xml配置文件中进行修改，IoC的也就成了：对象由Spring来创建、管理和装配！</p>
+<h2 id="案例进阶"><a href="#案例进阶" class="headerlink" title="案例进阶"></a>案例进阶</h2><ul>
+<li>利用ref，引用Spring中创建好的bean对象：</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">beans</span> <span class="attr">xmlns</span>=<span class="string">"http://www.springframework.org/schema/beans"</span></span></span><br><span class="line"><span class="tag">       <span class="attr">xmlns:xsi</span>=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span></span></span><br><span class="line"><span class="tag">       <span class="attr">xsi:schemaLocation</span>=<span class="string">"http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"mySqlImpl"</span> <span class="attr">class</span>=<span class="string">"com.mx.dao.UserDaoMySqlImpl"</span> /&gt;</span></span><br><span class="line">    </span><br><span class="line">    <span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"UserServiceImpl"</span> <span class="attr">class</span>=<span class="string">"com.mx.service.UserServiceImpl"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"userDao"</span> <span class="attr">ref</span>=<span class="string">"mySqlImpl"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">beans</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>Spring</category>
+      </categories>
+      <tags>
+        <tag>Spring</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Spring基础(4)-IOC创建对象的方式</title>
+    <url>/2020/04/05/Spring%E5%9F%BA%E7%A1%80-4-IOC%E5%88%9B%E5%BB%BA%E5%AF%B9%E8%B1%A1%E7%9A%84%E6%96%B9%E5%BC%8F/</url>
+    <content><![CDATA[<h2 id="通过无参构造函数"><a href="#通过无参构造函数" class="headerlink" title="通过无参构造函数"></a>通过无参构造函数</h2><p>Spring容器中创建对象，虽然没有显式的new，但说到底还是需要利用构造函数。如果xml配置中没有指定，那么默认通过无参构造函数进行创建，证明的示例如下：<a id="more"></a></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Hello</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    Hello()&#123;</span><br><span class="line">        System.out.println(<span class="string">"这是无参构造方法"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> name;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setName</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">show</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"Hello,"</span> + name );</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>调用之前的测试类main函数：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyTest</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 读取xml配置文件，获取Spring的上下文对象</span></span><br><span class="line">        ApplicationContext context = <span class="keyword">new</span> ClassPathXmlApplicationContext(<span class="string">"beans.xml"</span>);</span><br><span class="line">        <span class="comment">// 在执行getBean的时候，hello对象已经创建好了，通过无参构造</span></span><br><span class="line">        Hello hello = (Hello) context.getBean(<span class="string">"hello"</span>);</span><br><span class="line">        hello.show();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// print "这是无参构造方法"</span></span><br><span class="line"><span class="comment">// print "Hello,jesse"</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="通过有参构造函数"><a href="#通过有参构造函数" class="headerlink" title="通过有参构造函数"></a>通过有参构造函数</h2><p>修改Hello类：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Hello</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    Hello(String name)&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">        System.out.println(<span class="string">"这是有参构造方法"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> name;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setName</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">show</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"Hello,"</span> + name );</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>beans.xml有三种编写方式：</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 第一种根据index参数下标设置 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"hello"</span> <span class="attr">class</span>=<span class="string">"com.mx.pojo.Hello"</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- index指构造方法,下标从0开始 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">constructor-arg</span> <span class="attr">index</span>=<span class="string">"0"</span> <span class="attr">value</span>=<span class="string">"jesse"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 第二种根据参数名字设置，推荐 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"hello"</span> <span class="attr">class</span>=<span class="string">"com.mx.pojo.Hello"</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- name指参数名 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">constructor-arg</span> <span class="attr">name</span>=<span class="string">"name"</span> <span class="attr">value</span>=<span class="string">"jesse"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 第三种根据参数类型设置 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"hello"</span> <span class="attr">class</span>=<span class="string">"com.mx.pojo.Hello"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">constructor-arg</span> <span class="attr">type</span>=<span class="string">"java.lang.String"</span> <span class="attr">value</span>=<span class="string">"jesse"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="Spring配置简单说明"><a href="#Spring配置简单说明" class="headerlink" title="Spring配置简单说明"></a>Spring配置简单说明</h2><ul>
+<li>alias</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!--别名，如果添加了别名，也可以使用它来获取这个对象--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">alias</span> <span class="attr">name</span>=<span class="string">"hello"</span> <span class="attr">alias</span>=<span class="string">"hello2"</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>bean</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!--id：bean的唯一标识符--&gt;</span></span><br><span class="line"><span class="comment">&lt;!--class：bean对象的全限定名：包名+类型--&gt;</span></span><br><span class="line"><span class="comment">&lt;!--name：也是别名，可以取多个，用空格、逗号或者分好分隔均可--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"hello"</span> <span class="attr">name</span>=<span class="string">"hello2 h2,h3;h4"</span> <span class="attr">class</span>=<span class="string">"com.mx.pojo.Hello"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"name"</span> <span class="attr">value</span>=<span class="string">"Spring"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>import</li>
+</ul>
+<p>一般用于团队开发使用，可将多个配置文件导入：</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">import</span> <span class="attr">resource</span>=<span class="string">"&#123;path&#125;/beans.xml"</span>/&gt;</span></span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>Spring</category>
+      </categories>
+      <tags>
+        <tag>Spring</tag>
+      </tags>
+  </entry>
+</search>
