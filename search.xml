@@ -330,16 +330,58 @@
   <entry>
     <title>Spring基础(6)-Bean的自动装配</title>
     <url>/2020/04/11/Spring%E5%9F%BA%E7%A1%80(6)-Bean%E7%9A%84%E8%87%AA%E5%8A%A8%E8%A3%85%E9%85%8D/</url>
-    <content><![CDATA[<h2 id="关于自动装配"><a href="#关于自动装配" class="headerlink" title="关于自动装配"></a>关于自动装配</h2><p>之前在<code>beans.xml</code>文件中手动为对象赋初值的操作，就是手动装配，显然这是比较麻烦的，书写量比较大，那么我们就需要一种自动的机制来做这件事。</p>
+    <content><![CDATA[<h2 id="XML自动装配"><a href="#XML自动装配" class="headerlink" title="XML自动装配"></a>XML自动装配</h2><p>之前在<code>beans.xml</code>文件中手动为对象赋初值的操作，就是手动装配，显然这是比较麻烦的，书写量比较大，那么我们就需要一种自动的机制来做这件事。</p>
 <p>自动装配是Spring满足bean依赖的一种方式。Spring会在上下文中自动寻找，并自动给bean装配属性。<a id="more"></a></p>
 <p>Spring中有三种装配的方式：</p>
 <ul>
 <li>在xml中显式的配置</li>
 <li>在java中显式的配置</li>
-<li>隐式的自动装配（核心是autowired）</li>
+<li>隐式的自动装配</li>
 </ul>
-<p>通过简单例子来了解这一原理</p>
-<p>首先新建</p>
+<p>通过简单例子XML自动装配，来了解这一原理</p>
+<p>新建传统三件套，<code>pojo</code>，<code>beans.xml</code>和测试类，首先是pojo类：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Cat</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">bark</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"miao"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Dog</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">bark</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"wang"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">People</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> Cat cat;</span><br><span class="line">    <span class="keyword">private</span> Dog dog;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如上所示，我们想对People类自动注入，它有两个引用对象dog和cat，正常写法是使用ref，但我们也可以使用autowired来自动装配：</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">beans</span> <span class="attr">xmlns</span>=<span class="string">"http://www.springframework.org/schema/beans"</span></span></span><br><span class="line"><span class="tag">       <span class="attr">xmlns:xsi</span>=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span></span></span><br><span class="line"><span class="tag">       <span class="attr">xsi:schemaLocation</span>=<span class="string">"http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"cat"</span> <span class="attr">class</span>=<span class="string">"com.mx.pojo.Cat"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"dog"</span> <span class="attr">class</span>=<span class="string">"com.mx.pojo.Dog"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!--byName，会自动在容器上下文中查找，和自己对象set方法后面值对应的bean的id--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"people"</span> <span class="attr">class</span>=<span class="string">"com.mx.pojo.People"</span> <span class="attr">autowire</span>=<span class="string">"byName"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"name"</span> <span class="attr">value</span>=<span class="string">"jesse"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br><span class="line">    </span><br><span class="line"><span class="tag">&lt;/<span class="name">beans</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>autowire=“byName”这个配置项允许Spring容器根据name来自动对bean进行装配（赋值），这里列举autowired常用的方式：</p>
+<ul>
+<li><p>byName</p>
+<p>会自动在容器上下文中查找，和自己对象set方法对应的name相同的bean，使用id来查找，需要保证所有bean的id唯一，并且这个bean需要和自动注入的属性的set方法的值一致</p>
+</li>
+<li><p>byType</p>
+<p>会自动在容器上下文中查找，和自己对象属性类型相同的bean，需要保证所有bean的class唯一，并且这个bean需要和自动注入的属性的类型一致</p>
+</li>
+</ul>
+<h2 id="使用注解实现自动装配"><a href="#使用注解实现自动装配" class="headerlink" title="使用注解实现自动装配"></a>使用注解实现自动装配</h2><p>使用注解的自动装配比XML要方便，是官方推荐的方式，注解支持的最低jdk版本是1.5.</p>
+<p>要使用注解，需要如下支持：</p>
+<ul>
+<li>导入约束：context约束</li>
+<li>配置注解的支持：<code>&lt;context:annotation-config/&gt;</code></li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">beans</span> <span class="attr">xmlns</span>=<span class="string">"http://www.springframework.org/schema/beans"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns:xsi</span>=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns:context</span>=<span class="string">"http://www.springframework.org/schema/context"</span> </span></span><br><span class="line"><span class="tag">    <span class="attr">xsi:schemaLocation</span>=<span class="string">"http://www.springframework.org/schema/beans</span></span></span><br><span class="line"><span class="tag"><span class="string">        https://www.springframework.org/schema/beans/spring-beans.xsd</span></span></span><br><span class="line"><span class="tag"><span class="string">        http://www.springframework.org/schema/context</span></span></span><br><span class="line"><span class="tag"><span class="string">        https://www.springframework.org/schema/context/spring-context.xsd"</span>&gt;</span></span><br><span class="line">  </span><br><span class="line">    <span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"cat"</span> <span class="attr">class</span>=<span class="string">"com.mx.pojo.Cat"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"dog"</span> <span class="attr">class</span>=<span class="string">"com.mx.pojo.Dog"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"people"</span> <span class="attr">class</span>=<span class="string">"com.mx.pojo.People"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">context:annotation-config</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">beans</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>然后直接在属性上使用<code>@Autowired</code>，就实现了属性的自动注入。也可以在set方法上使用，一般而言，使用<code>@Autowired</code>之后，我们就可以不写set方法了，前提是这个这个自动装配的属性在IoC（Spring）容器中存在，且按照先类型再名字的方式匹配。</p>
+<p><code>@Autowired</code>存在一个属性设置<code>required</code>，来看一下它的用法：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 如果定义了Autowired的required属性为false，说明这个对象可以为null，否则不允许为空</span></span><br><span class="line"><span class="meta">@Autowired</span>(required = <span class="keyword">true</span>)</span><br><span class="line"><span class="keyword">private</span> Cat cat；</span><br></pre></td></tr></table></figure>
+
+<p>如果属性的name无法匹配，且类型无法唯一对应，比如出现多个不同id的Dog类型的bean，还想通过<code>@Autowired</code>自动装配的话，就要借助于另一个注解：<code>@Qualifier</code>:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Autowired</span></span><br><span class="line"><span class="meta">@Qualifier</span>(value = <span class="string">"dog2"</span>) <span class="comment">// 指定一个id值进行装配，但是也要符合相同类型才行</span></span><br><span class="line"><span class="keyword">private</span> Dog dog;</span><br></pre></td></tr></table></figure>
+
+<p>总结：如果自动装配的环境比较复杂，无法使用一个注解完成装配，可以使用<code>@Qualifier</code>去配合<code>@Autowired</code>的使用，制定一个唯一的bean对象进行注入。</p>
+<p>java还有一个原生注解<code>@Resource</code>注解，类似于上述二者的结合体，首先通过名字匹配，然后会通过类型匹配，这个功能强大，但是用的相对较少。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Resource</span>(name = <span class="string">"cat2"</span>)</span><br><span class="line"><span class="keyword">private</span> Cat cat;</span><br><span class="line"><span class="meta">@Resource</span></span><br><span class="line"><span class="keyword">private</span> Dog dog;</span><br></pre></td></tr></table></figure>
+
+<p>总结下<code>@Autowired</code>和<code>@Resource</code>的关系和区别：</p>
+<ul>
+<li><p>都可以用来自动装配，可以放在属性字段上</p>
+</li>
+<li><p><code>@Autowired</code>，属于Spring规范，默认通过byType方式实现，如果要允许null 值，可以设置它的required属性为false，如：@Autowired(required=false) ，如果我们想使用名称装配可以结合@Qualifier注解进行使用</p>
+</li>
+<li><p><code>@Resource</code>，属于J2EE规范，默认通过byName方式实现，如果找不到name，则通过byType实现，如果都找不到会提示报错。同时，如果name属性一旦指定，就只会按照名称进行装配。</p>
+</li>
+</ul>
 ]]></content>
       <categories>
         <category>Spring</category>
