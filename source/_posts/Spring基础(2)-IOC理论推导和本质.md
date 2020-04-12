@@ -10,7 +10,7 @@ tags:
 
 使用maven新建一个项目
 
-- 添加一个UserDao接口：
+添加一个UserDao接口：
 
 ```java
 public interface UserDao {
@@ -18,7 +18,7 @@ public interface UserDao {
 }
 ```
 
-- 实现这个UserDao接口：<!-- more -->
+实现这个UserDao接口：<!-- more -->
 
 ```java
 public class UserDaoImpl implements UserDao {
@@ -29,7 +29,7 @@ public class UserDaoImpl implements UserDao {
 }
 ```
 
-- 添加一个UserService接口：
+添加一个UserService接口：
 
 ```java
 public interface UserService {
@@ -37,7 +37,7 @@ public interface UserService {
 }
 ```
 
-- 实现这个UserService接口：
+实现这个UserService接口：
 
 ```java
 public class UserServiceImpl implements UserService {
@@ -49,7 +49,7 @@ public class UserServiceImpl implements UserService {
 }
 ```
 
-- 编写测试类，模拟controller：
+编写测试类，模拟controller：
 
 ```java
 public static void main(String[] args) {

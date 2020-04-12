@@ -10,7 +10,7 @@ tags:
 
 利用maven新建一个空的项目，然后逐步添加Spring相关代码，以最简单的Demo理解Spring的IOC原理。
 
-- 添加maven依赖：<!-- more -->
+添加maven依赖：<!-- more -->
 
 ```xml
 <dependencies>
@@ -22,7 +22,7 @@ tags:
 </dependencies>
 ```
 
-- 创建`com.mx.pojo.Hello`类：
+创建`com.mx.pojo.Hello`类：
 
 ```java
 public class Hello {
@@ -40,7 +40,7 @@ public class Hello {
 }
 ```
 
-- 编写`resources.beans.xml`配置文件:
+编写`resources.beans.xml`配置文件:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -56,7 +56,7 @@ public class Hello {
 </beans>
 ```
 
-- 编写测试类`test.MyTest`：
+编写测试类`test.MyTest`：
 
 ```java
 public class MyTest {
@@ -91,7 +91,7 @@ public class MyTest {
 
 ## 案例进阶
 
-- 利用ref，引用Spring中创建好的bean对象：
+利用ref，引用Spring中创建好的bean对象：
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
