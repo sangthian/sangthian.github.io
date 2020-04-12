@@ -20,16 +20,16 @@
     var CONFIG = {"hostname":"sangthian.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="案例分析使用maven新建一个项目  添加一个UserDao接口：  123public interface UserDao &amp;#123;    public void getUser();&amp;#125;   实现这个UserDao接口：">
+  <meta name="description" content="案例分析使用maven新建一个项目 添加一个UserDao接口： 123public interface UserDao &amp;#123;    public void getUser();&amp;#125;  实现这个UserDao接口：">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Spring基础(2)-IOC理论推导和本质">
 <meta property="og:url" content="https://sangthian.github.io/2020/04/05/Spring%E5%9F%BA%E7%A1%80(2)-IOC%E7%90%86%E8%AE%BA%E6%8E%A8%E5%AF%BC%E5%92%8C%E6%9C%AC%E8%B4%A8/index.html">
 <meta property="og:site_name" content="sangthian">
-<meta property="og:description" content="案例分析使用maven新建一个项目  添加一个UserDao接口：  123public interface UserDao &amp;#123;    public void getUser();&amp;#125;   实现这个UserDao接口：">
+<meta property="og:description" content="案例分析使用maven新建一个项目 添加一个UserDao接口： 123public interface UserDao &amp;#123;    public void getUser();&amp;#125;  实现这个UserDao接口：">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/sangthian/CloudPic@master/uPic/IOC%E7%90%86%E8%AE%BA%E8%83%8C%E6%99%AF.png">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/sangthian/CloudPic@master/uPic/%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5%E7%B1%BB%E6%AF%94.png">
 <meta property="article:published_time" content="2020-04-05T03:05:06.000Z">
-<meta property="article:modified_time" content="2020-04-05T03:59:40.568Z">
+<meta property="article:modified_time" content="2020-04-11T16:05:31.785Z">
 <meta property="article:author" content="Jesse Mx">
 <meta property="article:tag" content="Spring">
 <meta name="twitter:card" content="summary">
@@ -213,10 +213,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2020-04-05 11:05:06 / 修改时间：11:59:40" itemprop="dateCreated datePublished" datetime="2020-04-05T11:05:06+08:00">2020-04-05</time>
+              <time title="创建时间：2020-04-05 11:05:06" itemprop="dateCreated datePublished" datetime="2020-04-05T11:05:06+08:00">2020-04-05</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-04-12 00:05:31" itemprop="dateModified" datetime="2020-04-12T00:05:31+08:00">2020-04-12</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -246,29 +252,19 @@
 
       
         <h2 id="案例分析"><a href="#案例分析" class="headerlink" title="案例分析"></a>案例分析</h2><p>使用maven新建一个项目</p>
-<ul>
-<li>添加一个UserDao接口：</li>
-</ul>
+<p>添加一个UserDao接口：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">UserDao</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">getUser</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<ul>
-<li>实现这个UserDao接口：<a id="more"></a></li>
-</ul>
+<p>实现这个UserDao接口：<a id="more"></a></p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserDaoImpl</span> <span class="keyword">implements</span> <span class="title">UserDao</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">getUser</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"获取用户数据"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<ul>
-<li>添加一个UserService接口：</li>
-</ul>
+<p>添加一个UserService接口：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">UserService</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">getUser</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<ul>
-<li>实现这个UserService接口：</li>
-</ul>
+<p>实现这个UserService接口：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserServiceImpl</span> <span class="keyword">implements</span> <span class="title">UserService</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> UserDao userDao = <span class="keyword">new</span> UserDaoImpl(); </span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">getUser</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        userDao.getUser(); <span class="comment">// 调用Dao层方法</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<ul>
-<li>编写测试类，模拟controller：</li>
-</ul>
+<p>编写测试类，模拟controller：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">  	UserService service = <span class="keyword">new</span> UserServiceImpl();</span><br><span class="line">    service.getUser();</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// print "获取用户数据"</span></span><br></pre></td></tr></table></figure>
 
 <p>现在如果UserDao的实现类增加一个，比如叫<code>UserDaoMySqlImpl</code>：</p>
@@ -317,7 +313,7 @@
       <i class="fa fa-chevron-left"></i> Spring基础(1)-Spring简介
     </a></div>
       <div class="post-nav-item">
-    <a href="/2020/04/05/Spring%E5%9F%BA%E7%A1%80-3-%E7%AC%AC%E4%B8%80%E4%B8%AASpring-Demo/" rel="next" title="Spring基础(3)-第一个Spring Demo">
+    <a href="/2020/04/05/Spring%E5%9F%BA%E7%A1%80(3)-%E7%AC%AC%E4%B8%80%E4%B8%AASpring-Demo/" rel="next" title="Spring基础(3)-第一个Spring Demo">
       Spring基础(3)-第一个Spring Demo <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
