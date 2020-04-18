@@ -305,7 +305,7 @@
 <p>代理模式的分类：</p>
 <ul>
 <li>静态代理</li>
-<li>动态代理</li>
+<li>动态代理<a id="more"></a></li>
 </ul>
 <p><img src="https://cdn.jsdelivr.net/gh/sangthian/CloudPic@master/uPic/%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F.png" alt="代理模式"></p>
 <h2 id="静态代理"><a href="#静态代理" class="headerlink" title="静态代理"></a>静态代理</h2><p>角色分析：</p>

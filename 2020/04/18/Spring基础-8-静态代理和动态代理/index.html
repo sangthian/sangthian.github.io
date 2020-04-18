@@ -20,15 +20,15 @@
     var CONFIG = {"hostname":"sangthian.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="代理模式为什么我们要接触学习代理模式，因为这是Spring AOP的低层原理。 代理模式的分类：  静态代理 动态代理   静态代理角色分析：  抽象角色：一般使用接口或者抽象类解决 真实角色：被代理的角色 代理角色：代理真实角色，代理真实角色后，可以做一些附属操作 客户：访问代理  典型的静态代理步骤简单如下：  为现有的每一个类都编写一个对应的代理类，并且让它实现和目标类相同的接口（假设都有）">
+  <meta name="description" content="代理模式为什么我们要接触学习代理模式，因为这是Spring AOP的低层原理。 代理模式的分类：  静态代理 动态代理">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Spring基础(8)-静态代理和动态代理">
 <meta property="og:url" content="https://sangthian.github.io/2020/04/18/Spring%E5%9F%BA%E7%A1%80-8-%E9%9D%99%E6%80%81%E4%BB%A3%E7%90%86%E5%92%8C%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/index.html">
 <meta property="og:site_name" content="sangthian">
-<meta property="og:description" content="代理模式为什么我们要接触学习代理模式，因为这是Spring AOP的低层原理。 代理模式的分类：  静态代理 动态代理   静态代理角色分析：  抽象角色：一般使用接口或者抽象类解决 真实角色：被代理的角色 代理角色：代理真实角色，代理真实角色后，可以做一些附属操作 客户：访问代理  典型的静态代理步骤简单如下：  为现有的每一个类都编写一个对应的代理类，并且让它实现和目标类相同的接口（假设都有）">
+<meta property="og:description" content="代理模式为什么我们要接触学习代理模式，因为这是Spring AOP的低层原理。 代理模式的分类：  静态代理 动态代理">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/sangthian/CloudPic@master/uPic/%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F.png">
 <meta property="article:published_time" content="2020-04-18T09:25:44.000Z">
-<meta property="article:modified_time" content="2020-04-18T10:37:45.839Z">
+<meta property="article:modified_time" content="2020-04-18T10:39:11.918Z">
 <meta property="article:author" content="Jesse Mx">
 <meta property="article:tag" content="Spring">
 <meta name="twitter:card" content="summary">
@@ -214,7 +214,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2020-04-18 17:25:44 / 修改时间：18:37:45" itemprop="dateCreated datePublished" datetime="2020-04-18T17:25:44+08:00">2020-04-18</time>
+              <time title="创建时间：2020-04-18 17:25:44 / 修改时间：18:39:11" itemprop="dateCreated datePublished" datetime="2020-04-18T17:25:44+08:00">2020-04-18</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -248,7 +248,7 @@
 <p>代理模式的分类：</p>
 <ul>
 <li>静态代理</li>
-<li>动态代理</li>
+<li>动态代理<a id="more"></a></li>
 </ul>
 <p><img src="https://cdn.jsdelivr.net/gh/sangthian/CloudPic@master/uPic/%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F.png" alt="代理模式"></p>
 <h2 id="静态代理"><a href="#静态代理" class="headerlink" title="静态代理"></a>静态代理</h2><p>角色分析：</p>
