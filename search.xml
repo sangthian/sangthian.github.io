@@ -1,107 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>Spring基础(2)-IOC理论推导和本质</title>
-    <url>/2020/04/05/Spring%E5%9F%BA%E7%A1%80(2)-IOC%E7%90%86%E8%AE%BA%E6%8E%A8%E5%AF%BC%E5%92%8C%E6%9C%AC%E8%B4%A8/</url>
-    <content><![CDATA[<h2 id="案例分析"><a href="#案例分析" class="headerlink" title="案例分析"></a>案例分析</h2><p>使用maven新建一个项目</p>
-<p>添加一个UserDao接口：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">UserDao</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">getUser</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>实现这个UserDao接口：<a id="more"></a></p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserDaoImpl</span> <span class="keyword">implements</span> <span class="title">UserDao</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">getUser</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"获取用户数据"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>添加一个UserService接口：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">UserService</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">getUser</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>实现这个UserService接口：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserServiceImpl</span> <span class="keyword">implements</span> <span class="title">UserService</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> UserDao userDao = <span class="keyword">new</span> UserDaoImpl(); </span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">getUser</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        userDao.getUser(); <span class="comment">// 调用Dao层方法</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>编写测试类，模拟controller：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">  	UserService service = <span class="keyword">new</span> UserServiceImpl();</span><br><span class="line">    service.getUser();</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// print "获取用户数据"</span></span><br></pre></td></tr></table></figure>
-
-<p>现在如果UserDao的实现类增加一个，比如叫<code>UserDaoMySqlImpl</code>：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserDaoMySqlImpl</span> <span class="keyword">implements</span> <span class="title">UserDao</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">getUser</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"获取MySql用户数据"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>紧接着我们要去使用MySql的话 , 我们就需要去UserService实现类里面修改对应的实现 :</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserServiceImpl</span> <span class="keyword">implements</span> <span class="title">UserService</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> UserDao userDao = <span class="keyword">new</span> UserDaoMySqlImpl();  <span class="comment">// 修改实例对象</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">getUser</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        userDao.getUser(); <span class="comment">// 调用Dao层方法</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>如果还有更多类似的需求，那么代码改动量将会很大，因此 这种设计的耦合性太高了，牵一发而动全身 ，不适合快速变化的业务系统。</p>
-<h2 id="方法改进"><a href="#方法改进" class="headerlink" title="方法改进"></a>方法改进</h2><p>UserService的实现类不是直接去New一个新的实例，而是留出set接口，让调用者决定选择哪个具体的Dao实现，当然这其中有多态的思想在里面：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserServiceImpl</span> <span class="keyword">implements</span> <span class="title">UserService</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> UserDao userDao;</span><br><span class="line">    <span class="comment">// 利用set方法实现</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setUserDao</span><span class="params">(UserDao userDao)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.userDao = userDao;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">getUser</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        userDao.getUser();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>现在再使用测试类：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">  	UserService service = <span class="keyword">new</span> UserServiceImpl();</span><br><span class="line">    service.setUserDao(<span class="keyword">new</span> UserDaoMySqlImpl());</span><br><span class="line">    service.getUser();</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// print "获取MySql用户数据"</span></span><br></pre></td></tr></table></figure>
-
-<p>虽然只是一个简单的例子，但其中包含的设计思想确实比较高级的：</p>
-<ul>
-<li>以前所有东西都是由程序去进行控制创建</li>
-<li>而现在使用了set注入，主动权交给了调用者</li>
-<li>程序不用去管怎么创建，而是专注于业务逻辑的实现，耦合性大大降低 . 这也就是IOC的原型 。</li>
-</ul>
-<h2 id="IOC本质"><a href="#IOC本质" class="headerlink" title="IOC本质"></a>IOC本质</h2><p><img src="https://cdn.jsdelivr.net/gh/sangthian/CloudPic@master/uPic/IOC%E7%90%86%E8%AE%BA%E8%83%8C%E6%99%AF.png" alt="IOC理论背景"></p>
-<p><strong>控制反转（IOC）是一种设计思想，依赖注入（DI）是实现IOC的一种方式</strong>。在没有IOC的程序中，我们使用面向对象编程，对象的创建和对象之间的依赖完全硬编码在程序中，对象的创建由程序自己控制，控制反转后对象的创建转移给第三方，也就是“<strong>获得依赖对象的方式反转了</strong>”。</p>
-<h2 id="依赖注入"><a href="#依赖注入" class="headerlink" title="依赖注入"></a>依赖注入</h2><p>IOC的另外的名字叫做依赖注入（Dependency Injection），所谓的依赖注入，就是由IOC容器在运行期间，动态地将某种依赖关系注入到对象之中。所以，依赖注入(DI)和控制反转(IOC)是从不同的角度的描述的同一件事情，<strong>就是指通过引入IOC容器，利用依赖关系注入的方式，实现对象之间的解耦</strong>。</p>
-<p><img src="https://cdn.jsdelivr.net/gh/sangthian/CloudPic@master/uPic/%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5%E7%B1%BB%E6%AF%94.png" alt="依赖注入类比"></p>
-<p>类似上图一样：从外部usb读取文件，主机没必要知道通过啥设备，只要符合连接接口就可以了，外部设备主动权由我们自己控制，这样就解耦到最低。</p>
-]]></content>
-      <categories>
-        <category>Spring</category>
-      </categories>
-      <tags>
-        <tag>Spring</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Spring基础(1)-Spring简介</title>
-    <url>/2020/04/05/Spring%E5%9F%BA%E7%A1%80(1)-Spring%E7%AE%80%E4%BB%8B/</url>
-    <content><![CDATA[<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>文档内容为B站“狂神说Java”课程的笔记，外加自己的个人理解。下面正式开始：</p>
-<p><a href="https://docs.spring.io/spring-framework/docs/current/spring-framework-reference/core.html" target="_blank" rel="noopener">Spring官方文档-En</a></p>
-<ul>
-<li>Spring是一个开源免费的框架（容器）</li>
-<li>Spring是一个轻量级的、非入侵式（不对原代码产生影响）</li>
-<li>控制翻转（IOC），面向切面编程（AOP）</li>
-<li>支持事务处理，对框架的支持</li>
-</ul>
-<a id="more"></a>
-
-<p>总结：Spring是一个轻量级的控制反转（IOC）和面向切面编程（AOP）的框架。</p>
-<h2 id="组成"><a href="#组成" class="headerlink" title="组成"></a>组成</h2><p>Spring 框架是一个分层架构，由 7 个定义良好的模块组成。Spring 模块构建在核心容器之上，核心容器定义了创建、配置和管理 bean 的方式 。</p>
-<p><img src="https://cdn.jsdelivr.net/gh/sangthian/CloudPic@master/uPic/Spring7%E4%B8%AA%E7%BB%84%E6%88%90.png" alt="Spring7个组成"></p>
-<ul>
-<li><strong>核心容器</strong>：核心容器提供 Spring 框架的基本功能。核心容器的主要组件是 <code>BeanFactory</code>，它是工厂模式的实现。<code>BeanFactory</code> 使用控制反转（IOC） 模式将应用程序的配置和依赖性规范与实际的应用程序代码分开。</li>
-<li><strong>Spring 上下文</strong>：Spring 上下文是一个配置文件，向 Spring 框架提供上下文信息。Spring 上下文包括企业服务，例如 JNDI、EJB、电子邮件、国际化、校验和调度功能。</li>
-<li><strong>Spring AOP</strong>：通过配置管理特性，Spring AOP 模块直接将面向切面的编程功能 , 集成到了 Spring 框架中。所以，可以很容易地使 Spring 框架管理任何支持 AOP的对象。Spring AOP 模块为基于 Spring 的应用程序中的对象提供了事务管理服务。通过使用 Spring AOP，不用依赖组件，就可以将声明性事务管理集成到应用程序中。</li>
-<li><strong>Spring DAO</strong>：JDBC DAO 抽象层提供了有意义的异常层次结构，可用该结构来管理异常处理和不同数据库供应商抛出的错误消息。异常层次结构简化了错误处理，并且极大地降低了需要编写的异常代码数量（例如打开和关闭连接）。Spring DAO 的面向 JDBC 的异常遵从通用的 DAO 异常层次结构。</li>
-<li><strong>Spring ORM</strong>：Spring 框架插入了若干个 ORM 框架，从而提供了 ORM 的对象关系工具，其中包括 JDO、Hibernate 和 iBatis SQL Map。所有这些都遵从 Spring 的通用事务和 DAO 异常层次结构。</li>
-<li><strong>Spring Web 模块</strong>：Web 上下文模块建立在应用程序上下文模块之上，为基于 Web 的应用程序提供了上下文。所以，Spring 框架支持与 Jakarta Struts 的集成。Web 模块还简化了处理多部分请求以及将请求参数绑定到域对象的工作。</li>
-<li><strong>Spring MVC 框架</strong>：MVC 框架是一个全功能的构建 Web 应用程序的 MVC 实现。通过策略接口，MVC 框架变成为高度可配置的，MVC 容纳了大量视图技术，其中包括 JSP、Velocity、Tiles、iText 和 POI。</li>
-</ul>
-<h2 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h2><img src="https://cdn.jsdelivr.net/gh/sangthian/CloudPic@master/uPic/Spring%20Boot.png" alt="SpringBoot"  />
-
-<ul>
-<li>Spring Boot：一个快速开发的脚手架<ul>
-<li>基于Spring Boot可以快速开发单个微服务</li>
-<li>约定大于配置</li>
-</ul>
-</li>
-<li>Spring Cloud<ul>
-<li>Spring Cloud基于Spring Boot来实现的</li>
-</ul>
-</li>
-<li>Spring Boot专注于快速、方便集成的单个微服务个体，Spring Cloud关注全局的服务治理框架；</li>
-<li>Spring Boot使用了约束优于配置的理念，很多集成方案已经帮你选择好了，能不配置就不配置 , Spring Cloud很大的一部分是基于Spring Boot来实现，Spring Boot可以离开Spring Cloud独立使用开发项目，但是Spring Cloud离不开Spring Boot，属于依赖的关系。</li>
-</ul>
-<p>学习Spring Boot的前提是需要完全掌握Spring及Spring MVC</p>
-<p>弊端：Spring本身发展了太久，违背了原来的理念，配置十分繁琐，但是Spring Boot很好的解决了这个问题。</p>
-]]></content>
-      <categories>
-        <category>Spring</category>
-      </categories>
-      <tags>
-        <tag>Spring</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Linux基本命令</title>
     <url>/2020/03/14/Linux%E5%9F%BA%E6%9C%AC%E5%91%BD%E4%BB%A4/</url>
     <content><![CDATA[<h2 id="系统操作命令"><a href="#系统操作命令" class="headerlink" title="系统操作命令"></a>系统操作命令</h2><ul>
@@ -281,44 +180,254 @@
       </tags>
   </entry>
   <entry>
-    <title>Spring基础(3)-第一个Spring Demo</title>
-    <url>/2020/04/05/Spring%E5%9F%BA%E7%A1%80(3)-%E7%AC%AC%E4%B8%80%E4%B8%AASpring-Demo/</url>
-    <content><![CDATA[<h2 id="Spring-Demo"><a href="#Spring-Demo" class="headerlink" title="Spring Demo"></a>Spring Demo</h2><p>利用maven新建一个空的项目，然后逐步添加Spring相关代码，以最简单的Demo理解Spring的IOC原理。</p>
-<p>添加maven依赖：<a id="more"></a></p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-webmvc<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">version</span>&gt;</span>5.1.10.RELEASE<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br></pre></td></tr></table></figure>
+    <title>Spring基础(7)-使用注解开发</title>
+    <url>/2020/04/14/Spring%E5%9F%BA%E7%A1%80-7-%E4%BD%BF%E7%94%A8%E6%B3%A8%E8%A7%A3%E5%BC%80%E5%8F%91/</url>
+    <content><![CDATA[<h2 id="Bean的注入"><a href="#Bean的注入" class="headerlink" title="Bean的注入"></a>Bean的注入</h2><p>随着Spring技术的发展，目前已经越来越多使用注解开发，而Spring Boot更是可以做到全注解。</p>
+<p>在Spring4之后，要使用注解进行开发，必须导入aop的包，且在配置文件中需要context的约束。</p>
+<p>我们之前都是使用xml配置文件来定义bean，现在可以使用注解了。首先是配置扫描哪些包下面的注解，配置如下：<a id="more"></a></p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!--指定注解扫描包--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">context:component-scan</span> <span class="attr">base-package</span>=<span class="string">"com.mx.pojo"</span>/&gt;</span></span><br></pre></td></tr></table></figure>
 
-<p>创建<code>com.mx.pojo.Hello</code>类：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Hello</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> name;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setName</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">show</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"Hello,"</span> + name );</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然后在指定的包下编写类，增加一个<code>@Component</code>注解：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="comment">// 相当于配置文件中 &lt;bean id="user" class="当前注解的类"/&gt;</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> String name = <span class="string">"jesse"</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>编写<code>resources.beans.xml</code>配置文件:</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">beans</span> <span class="attr">xmlns</span>=<span class="string">"http://www.springframework.org/schema/beans"</span></span></span><br><span class="line"><span class="tag">       <span class="attr">xmlns:xsi</span>=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span></span></span><br><span class="line"><span class="tag">       <span class="attr">xsi:schemaLocation</span>=<span class="string">"http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!--使用Spring来创建对象，在Spring中这些对象都称之为Bean--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"hello"</span> <span class="attr">class</span>=<span class="string">"com.mx.pojo.Hello"</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!--类中的属性成员，可以赋初值，通过setter方法--&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"name"</span> <span class="attr">value</span>=<span class="string">"jesse"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">beans</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><code>@Component</code>：关于组件的注解，放在类上，说明这个类被Spring管理了，变成了bean。</p>
+<h2 id="属性的注入"><a href="#属性的注入" class="headerlink" title="属性的注入"></a>属性的注入</h2><p>我们使用<code>@Value</code>注解来对属性进行注入。</p>
+<p>方式1：不提供set方法，直接在属性定义上添加注解：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="comment">// 相当于配置文件中 &lt;bean id="user" class="当前注解的类"/&gt;</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Value</span>(<span class="string">"jesse"</span>)</span><br><span class="line">    <span class="comment">// 相当于配置文件中 &lt;property name="name" value="jesse"/&gt;</span></span><br><span class="line">    <span class="keyword">public</span> String name;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>编写测试类<code>test.MyTest</code>：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyTest</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 读取xml配置文件，获取Spring的上下文对象</span></span><br><span class="line">        ApplicationContext context = <span class="keyword">new</span> ClassPathXmlApplicationContext(<span class="string">"beans.xml"</span>);</span><br><span class="line">        <span class="comment">// 根据bean的id选取，获得对象实例</span></span><br><span class="line">        Hello hello = (Hello) context.getBean(<span class="string">"hello"</span>);</span><br><span class="line">        hello.show();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// print "Hello,jesse"</span></span><br></pre></td></tr></table></figure>
+<p>方式2：如果提供了set方法，那么可以在set方法上添加注解：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> String name;</span><br><span class="line">  </span><br><span class="line">    <span class="meta">@Value</span>(<span class="string">"jesse"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setName</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p><code>ClassPathXmlApplicationContext</code>和<code>ApplicationContext</code>存在N次继承关系，是利用多态的向上转型，从类名中可以探知，获取上下文对象的方式除了xml配置之外，还有其他的，比如注解、文件等。</p>
-<h2 id="问题思考"><a href="#问题思考" class="headerlink" title="问题思考"></a>问题思考</h2><ul>
-<li><p>hello对象是谁创建的？</p>
+<h2 id="衍生的注解"><a href="#衍生的注解" class="headerlink" title="衍生的注解"></a>衍生的注解</h2><p><code>@Component</code>有几个衍生的注解，在微博开发中会按照mvc三层架构进行分级，于是产生了下列的衍生注解：</p>
 <ul>
-<li>hello对象是由Spring创建的，程序中没有new</li>
+<li><code>@Controller</code>：web层</li>
+<li><code>@Service</code>：service层</li>
+<li><code>@Repository</code>：dao层</li>
+</ul>
+<p>这几个注解在功能上本质是一样的，都是将类交给Spring来管理，注册成为bean。分开只是为了分层管理。</p>
+<h2 id="自动装配的注解"><a href="#自动装配的注解" class="headerlink" title="自动装配的注解"></a>自动装配的注解</h2><p>也就是前面讲到的<code>@Autowired</code>，补充说下<code>@Autowired</code>的三种应用场景，分别是字段（变量）注入，构造器注入和set注入，举例如下：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 变量（filed）注入：</span></span><br><span class="line"><span class="meta">@Autowired</span></span><br><span class="line"><span class="keyword">private</span> LoginService loginService;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 构造器注入</span></span><br><span class="line"><span class="keyword">private</span> LoginService loginService;</span><br><span class="line"><span class="meta">@Autowired</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">LoginController</span> <span class="params">(LoginService loginService)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">this</span>.loginService = loginService;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// set方法注入</span></span><br><span class="line"><span class="keyword">private</span> LoginService loginService;</span><br><span class="line"><span class="meta">@Autowired</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setLoginService</span> <span class="params">(LoginService loginService)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">this</span>.loginService = loginService;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>三者的关系和区别：</p>
+<ul>
+<li>变量注入：过于依赖注入容器了，当没有启动整个依赖容器时，这个类就不能运转，在反射时无法提供这个类需要的依赖。不推荐使用，在Idea中会提示“Field injection is not recommended”的警告</li>
+<li>构造器注入：如果注入的属性是必选的属性，则通过构造器注入。某些强制规范的类，都采用此方式。</li>
+<li>set注入：如果注入的属性是可选的属性，则通过setter方法注入。set注入的好处在于可有可无，即使没有注入这个依赖，那么也不会影响整个类的运行。</li>
+</ul>
+<h2 id="作用域注解"><a href="#作用域注解" class="headerlink" title="作用域注解"></a>作用域注解</h2><p>使用<code>@scope</code>注解：</p>
+<ul>
+<li>singleton：默认，Spring会采用单例模式创建这个对象。关闭工厂 ，所有的对象都会销毁。</li>
+<li>prototype：多例模式。关闭工厂 ，所有的对象不会销毁。内部的垃圾回收机制会回收。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Controller</span></span><br><span class="line"><span class="meta">@Scope</span>(<span class="string">"prototype"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Value</span>(<span class="string">"jesse"</span>)</span><br><span class="line">    <span class="keyword">public</span> String name;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="使用Java类进行配置"><a href="#使用Java类进行配置" class="headerlink" title="使用Java类进行配置"></a>使用Java类进行配置</h2><p>现在完全不使用Spring的xml来进行配置，全部交给Java来做。利用Spring的子项目JavaConfig来做。</p>
+<p>新建pojo类<code>com.mx.pojo.User</code>：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 说明这个类被Spring接管了，注册到了容器中</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 属性注入值</span></span><br><span class="line">    <span class="meta">@Value</span>(<span class="string">"jesse"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setName</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>新建配置类<code>com.mx.config.AppConfig</code>：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 这个也会被Spring容器托管，注册到容器中</span></span><br><span class="line"><span class="comment">// 本质上是一个@Component，@Configuration代表这个是配置类，和beans.xml起的作用是一致的</span></span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@ComponentScan</span>(<span class="string">"com.mx.pojo"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AppConfig</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 注册一个Bean，相当于xml中的bean标签</span></span><br><span class="line">    <span class="comment">// 方法的名字，相当于bean标签中的id属性</span></span><br><span class="line">    <span class="comment">// 方法的返回值，相当于bean标签的class属性</span></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> User <span class="title">getUser</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> User();  <span class="comment">// 返回注入的bean</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>编写测试类：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyTest</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        ApplicationContext context = <span class="keyword">new</span> AnnotationConfigApplicationContext(AppConfig<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">        User user = context.getBean(<span class="string">"getUser"</span>, User<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">        System.out.println(user.getName());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// print "jesse"</span></span><br></pre></td></tr></table></figure>
+
+<p>再补充下，导入其他配置的做法：再次编写一个配置类：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Configuration</span>  </span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AppConfig2</span> </span>&#123;</span><br><span class="line">  ... </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>导入这个配置类</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@Import</span>(AppConfig2<span class="class">.<span class="keyword">class</span>)  //导入合并其他配置类，类似于配置文件中的<span class="title">inculde</span>标签</span></span><br><span class="line"><span class="class"><span class="title">public</span> <span class="title">class</span> <span class="title">AppConfig</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Dog <span class="title">dog</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> Dog();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>此处例子比较简单，更多的内容需要去官方文档查看。</p>
+<p>全注解开发是Spring Boot的精髓之一，之后的学习需要更多了解这方面内容。</p>
+]]></content>
+      <categories>
+        <category>Spring</category>
+      </categories>
+      <tags>
+        <tag>Spring</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Spring基础(2)-IOC理论推导和本质</title>
+    <url>/2020/04/05/Spring%E5%9F%BA%E7%A1%80-2-IOC%E7%90%86%E8%AE%BA%E6%8E%A8%E5%AF%BC%E5%92%8C%E6%9C%AC%E8%B4%A8/</url>
+    <content><![CDATA[<h2 id="案例分析"><a href="#案例分析" class="headerlink" title="案例分析"></a>案例分析</h2><p>使用maven新建一个项目</p>
+<p>添加一个UserDao接口：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">UserDao</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">getUser</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>实现这个UserDao接口：<a id="more"></a></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserDaoImpl</span> <span class="keyword">implements</span> <span class="title">UserDao</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">getUser</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"获取用户数据"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>添加一个UserService接口：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">UserService</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">getUser</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>实现这个UserService接口：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserServiceImpl</span> <span class="keyword">implements</span> <span class="title">UserService</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> UserDao userDao = <span class="keyword">new</span> UserDaoImpl(); </span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">getUser</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        userDao.getUser(); <span class="comment">// 调用Dao层方法</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>编写测试类，模拟controller：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">  	UserService service = <span class="keyword">new</span> UserServiceImpl();</span><br><span class="line">    service.getUser();</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// print "获取用户数据"</span></span><br></pre></td></tr></table></figure>
+
+<p>现在如果UserDao的实现类增加一个，比如叫<code>UserDaoMySqlImpl</code>：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserDaoMySqlImpl</span> <span class="keyword">implements</span> <span class="title">UserDao</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">getUser</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"获取MySql用户数据"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>紧接着我们要去使用MySql的话 , 我们就需要去UserService实现类里面修改对应的实现 :</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserServiceImpl</span> <span class="keyword">implements</span> <span class="title">UserService</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> UserDao userDao = <span class="keyword">new</span> UserDaoMySqlImpl();  <span class="comment">// 修改实例对象</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">getUser</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        userDao.getUser(); <span class="comment">// 调用Dao层方法</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果还有更多类似的需求，那么代码改动量将会很大，因此 这种设计的耦合性太高了，牵一发而动全身 ，不适合快速变化的业务系统。</p>
+<h2 id="方法改进"><a href="#方法改进" class="headerlink" title="方法改进"></a>方法改进</h2><p>UserService的实现类不是直接去New一个新的实例，而是留出set接口，让调用者决定选择哪个具体的Dao实现，当然这其中有多态的思想在里面：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserServiceImpl</span> <span class="keyword">implements</span> <span class="title">UserService</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> UserDao userDao;</span><br><span class="line">    <span class="comment">// 利用set方法实现</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setUserDao</span><span class="params">(UserDao userDao)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.userDao = userDao;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">getUser</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        userDao.getUser();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>现在再使用测试类：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">  	UserService service = <span class="keyword">new</span> UserServiceImpl();</span><br><span class="line">    service.setUserDao(<span class="keyword">new</span> UserDaoMySqlImpl());</span><br><span class="line">    service.getUser();</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// print "获取MySql用户数据"</span></span><br></pre></td></tr></table></figure>
+
+<p>虽然只是一个简单的例子，但其中包含的设计思想确实比较高级的：</p>
+<ul>
+<li>以前所有东西都是由程序去进行控制创建</li>
+<li>而现在使用了set注入，主动权交给了调用者</li>
+<li>程序不用去管怎么创建，而是专注于业务逻辑的实现，耦合性大大降低 . 这也就是IOC的原型 。</li>
+</ul>
+<h2 id="IOC本质"><a href="#IOC本质" class="headerlink" title="IOC本质"></a>IOC本质</h2><p><img src="https://cdn.jsdelivr.net/gh/sangthian/CloudPic@master/uPic/IOC%E7%90%86%E8%AE%BA%E8%83%8C%E6%99%AF.png" alt="IOC理论背景"></p>
+<p><strong>控制反转（IOC）是一种设计思想，依赖注入（DI）是实现IOC的一种方式</strong>。在没有IOC的程序中，我们使用面向对象编程，对象的创建和对象之间的依赖完全硬编码在程序中，对象的创建由程序自己控制，控制反转后对象的创建转移给第三方，也就是“<strong>获得依赖对象的方式反转了</strong>”。</p>
+<h2 id="依赖注入"><a href="#依赖注入" class="headerlink" title="依赖注入"></a>依赖注入</h2><p>IOC的另外的名字叫做依赖注入（Dependency Injection），所谓的依赖注入，就是由IOC容器在运行期间，动态地将某种依赖关系注入到对象之中。所以，依赖注入(DI)和控制反转(IOC)是从不同的角度的描述的同一件事情，<strong>就是指通过引入IOC容器，利用依赖关系注入的方式，实现对象之间的解耦</strong>。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/sangthian/CloudPic@master/uPic/%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5%E7%B1%BB%E6%AF%94.png" alt="依赖注入类比"></p>
+<p>类似上图一样：从外部usb读取文件，主机没必要知道通过啥设备，只要符合连接接口就可以了，外部设备主动权由我们自己控制，这样就解耦到最低。</p>
+]]></content>
+      <categories>
+        <category>Spring</category>
+      </categories>
+      <tags>
+        <tag>Spring</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Spring基础(8)-静态代理和动态代理</title>
+    <url>/2020/04/18/Spring%E5%9F%BA%E7%A1%80-8-%E9%9D%99%E6%80%81%E4%BB%A3%E7%90%86%E5%92%8C%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/</url>
+    <content><![CDATA[<h2 id="代理模式"><a href="#代理模式" class="headerlink" title="代理模式"></a>代理模式</h2><p>为什么我们要接触学习代理模式，因为这是Spring AOP的低层原理。</p>
+<p>代理模式的分类：</p>
+<ul>
+<li>静态代理</li>
+<li>动态代理</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/sangthian/CloudPic@master/uPic/%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F.png" alt="代理模式"></p>
+<h2 id="静态代理"><a href="#静态代理" class="headerlink" title="静态代理"></a>静态代理</h2><p>角色分析：</p>
+<ul>
+<li>抽象角色：一般使用接口或者抽象类解决</li>
+<li>真实角色：被代理的角色</li>
+<li>代理角色：代理真实角色，代理真实角色后，可以做一些附属操作</li>
+<li>客户：访问代理</li>
+</ul>
+<p>典型的静态代理步骤简单如下：</p>
+<ul>
+<li>为现有的每一个类都编写一个<strong>对应的</strong>代理类，并且让它实现和目标类相同的接口（假设都有）</li>
+<li>在创建代理对象时，通过构造器或者setter函数塞入一个目标对象，然后在代理对象的方法内部调用目标对象同名方法，并在调用前后增加附属操作（比如打印日志）</li>
+<li><strong>代理对象 = 增强代码 + 目标对象（原对象）</strong>，有了代理对象后，就不用原对象了</li>
+</ul>
+<p>实例代码如下，首先是抽象的接口类：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">UserService</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">add</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">delete</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">query</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">update</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后真实角色实现这个接口：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserServiceImpl</span> <span class="keyword">implements</span> <span class="title">UserService</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">add</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"this is add"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">delete</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"this is delete"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">query</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"this is query"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">update</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"this is update"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>接下来编写静态代理类：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserServiceProxy</span> <span class="keyword">implements</span> <span class="title">UserService</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> UserServiceImpl userService;</span><br><span class="line">    </span><br><span class="line">    UserServiceProxy()&#123;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    UserServiceProxy(UserServiceImpl userService)&#123;</span><br><span class="line">        <span class="keyword">this</span>.userService = userService;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">add</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        log();</span><br><span class="line">        userService.add();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">delete</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        log();</span><br><span class="line">        userService.delete();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">query</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        log();</span><br><span class="line">        userService.query();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">update</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        log();</span><br><span class="line">        userService.update();</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">log</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"before use"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>编写测试类：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyTest</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 真实角色</span></span><br><span class="line">        UserServiceImpl userService = <span class="keyword">new</span> UserServiceImpl();</span><br><span class="line">        <span class="comment">// 代理角色</span></span><br><span class="line">        UserServiceProxy proxy = <span class="keyword">new</span> UserServiceProxy(userService);</span><br><span class="line">        <span class="comment">// 调用代理类方法</span></span><br><span class="line">        proxy.add();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// print "before use"</span></span><br><span class="line"><span class="comment">// print "this is add"</span></span><br></pre></td></tr></table></figure>
+
+<p>代理模式的好处：</p>
+<ul>
+<li>可以使得真实角色更加纯粹，不用去关注一些公共业务</li>
+<li>公共业务交给代理角色，实现了业务分工</li>
+<li>公共业务发生扩展，方便修改</li>
+</ul>
+<p>静态代理缺点：</p>
+<ul>
+<li>一个真实角色就会产生一个代理角色，代码量翻倍</li>
+</ul>
+<h2 id="动态代理"><a href="#动态代理" class="headerlink" title="动态代理"></a>动态代理</h2><p>动态代理利用java反射的原理，可以自动生成对应的的代理类。</p>
+<ul>
+<li>动态代理和静态代理的角色是一致的</li>
+<li>动态代理的类是动态生成的，不是直接编码的</li>
+<li>动态代理实现分为：基于接口的动态代理，基于类的动态代理<ul>
+<li>基于接口-JDK动态代理【主要方法】</li>
+<li>基于类-cglib</li>
+<li>java字节码实现-Javassist</li>
 </ul>
 </li>
-<li><p>hello对象的属性是怎么设置的？   </p>
+</ul>
+<p>JDK动态代理需要了解两个类：</p>
 <ul>
-<li>hello对象的属性是由Spring容器设置的</li>
+<li><code>java.lang.reflect.Proxy</code>，代理类<ul>
+<li>提供创建动态代理类和实例的静态方法</li>
+<li><code>newProxyInstance</code>是主要生成代理实例的方法，可以返回指定接口的代理类实例，并将方法调用分派给指定的调用处理程序，也就是InvocationHandler</li>
+</ul>
+</li>
+<li><code>java.lang.reflect.InvocationHandler</code>，调用处理程序<ul>
+<li>是由代理实例的调用处理程序实现的接口。每个代理实例都有一个关联的调用处理程序，<strong>当代理实例调用方法的时候，方法调用将被编码并分配到其调用处理程序的invoke方法</strong></li>
+<li>包含唯一的<code>invoke</code>方法，需实现它</li>
 </ul>
 </li>
 </ul>
-<p>这个过程就叫做控制反转：</p>
-<ul>
-<li>控制：谁来控制对象的创建，在使用Spring之后，对象是由Spring来创建</li>
-<li>反转：程序本身不创建对象，变成被动的接受对象</li>
-<li>依赖注入：利用set方法进行注入</li>
-</ul>
-<p>因此对于初级的Spring程序，要实现不同的操作，只需要在xml配置文件中进行修改，IoC的也就成了：对象由Spring来创建、管理和装配！</p>
-<h2 id="案例进阶"><a href="#案例进阶" class="headerlink" title="案例进阶"></a>案例进阶</h2><p>利用ref，引用Spring中创建好的bean对象：</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">beans</span> <span class="attr">xmlns</span>=<span class="string">"http://www.springframework.org/schema/beans"</span></span></span><br><span class="line"><span class="tag">       <span class="attr">xmlns:xsi</span>=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span></span></span><br><span class="line"><span class="tag">       <span class="attr">xsi:schemaLocation</span>=<span class="string">"http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"mySqlImpl"</span> <span class="attr">class</span>=<span class="string">"com.mx.dao.UserDaoMySqlImpl"</span> /&gt;</span></span><br><span class="line">    </span><br><span class="line">    <span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"UserServiceImpl"</span> <span class="attr">class</span>=<span class="string">"com.mx.service.UserServiceImpl"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"userDao"</span> <span class="attr">ref</span>=<span class="string">"mySqlImpl"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">beans</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>实例代码如下，抽象的接口类和真实角色和上面一样，就先省略了，下面直接看动态代理类：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 使用这个类自动生成代理类</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ProxyInvocationHandler</span> <span class="keyword">implements</span> <span class="title">InvocationHandler</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 被代理的接口类</span></span><br><span class="line">    <span class="keyword">private</span> Object target;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// setter方法传值</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setTarget</span><span class="params">(Object target)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.target = target;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 通过Proxy的静态方法，生成得到代理类</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">getProxy</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> Proxy.newProxyInstance(<span class="keyword">this</span>.getClass().getClassLoader(), target.getClass().getInterfaces(), <span class="keyword">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 实现InvocationHandler接口的唯一方法</span></span><br><span class="line">    <span class="comment">// 处理代理实例的方法，并返回结果</span></span><br><span class="line">    <span class="comment">// proxy参数看起来并未使用，其作用不是显式的，看资料说，只有proxy实例在InvocationHandler实现类里加载才能产生第二个参数method</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">invoke</span><span class="params">(Object proxy, Method method, Object[] args)</span> <span class="keyword">throws</span> Throwable</span>&#123;</span><br><span class="line">        log(method.getName());</span><br><span class="line">        <span class="keyword">return</span> method.invoke(target, args);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 增加的操作</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">log</span><span class="params">(String msg)</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"before "</span> + msg);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
+<p>编写测试类：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyTest</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 真实角色</span></span><br><span class="line">        UserServiceImpl userService = <span class="keyword">new</span> UserServiceImpl();</span><br><span class="line">        <span class="comment">// 代理角色</span></span><br><span class="line">        ProxyInvocationHandler pih = <span class="keyword">new</span> ProxyInvocationHandler();</span><br><span class="line">        <span class="comment">// 设置需要代理的对象</span></span><br><span class="line">        pih.setTarget(userService);</span><br><span class="line">        <span class="comment">//动态生成代理类</span></span><br><span class="line">        UserService proxy = (UserService) pih.getProxy();</span><br><span class="line">        proxy.add();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// print "before add"</span></span><br><span class="line"><span class="comment">// print "this is add"</span></span><br></pre></td></tr></table></figure>
+
+<p>动态代理的好处：</p>
+<ul>
+<li>一个动态代理类代理的是一个接口，一般就是对应的一类业务</li>
+<li>一个动态代理类可以代理多个类，只要是实现了同一个接口即可</li>
+</ul>
+]]></content>
+      <categories>
+        <category>Spring</category>
+      </categories>
+      <tags>
+        <tag>Spring</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Spring基础(1)-Spring简介</title>
+    <url>/2020/04/05/Spring%E5%9F%BA%E7%A1%80-1-Spring%E7%AE%80%E4%BB%8B/</url>
+    <content><![CDATA[<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>文档内容为B站“狂神说Java”课程的笔记，外加自己的个人理解。下面正式开始：</p>
+<p><a href="https://docs.spring.io/spring-framework/docs/current/spring-framework-reference/core.html" target="_blank" rel="noopener">Spring官方文档-En</a></p>
+<ul>
+<li>Spring是一个开源免费的框架（容器）</li>
+<li>Spring是一个轻量级的、非入侵式（不对原代码产生影响）</li>
+<li>控制翻转（IOC），面向切面编程（AOP）</li>
+<li>支持事务处理，对框架的支持</li>
+</ul>
+<a id="more"></a>
+
+<p>总结：Spring是一个轻量级的控制反转（IOC）和面向切面编程（AOP）的框架。</p>
+<h2 id="组成"><a href="#组成" class="headerlink" title="组成"></a>组成</h2><p>Spring 框架是一个分层架构，由 7 个定义良好的模块组成。Spring 模块构建在核心容器之上，核心容器定义了创建、配置和管理 bean 的方式 。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/sangthian/CloudPic@master/uPic/Spring7%E4%B8%AA%E7%BB%84%E6%88%90.png" alt="Spring7个组成"></p>
+<ul>
+<li><strong>核心容器</strong>：核心容器提供 Spring 框架的基本功能。核心容器的主要组件是 <code>BeanFactory</code>，它是工厂模式的实现。<code>BeanFactory</code> 使用控制反转（IOC） 模式将应用程序的配置和依赖性规范与实际的应用程序代码分开。</li>
+<li><strong>Spring 上下文</strong>：Spring 上下文是一个配置文件，向 Spring 框架提供上下文信息。Spring 上下文包括企业服务，例如 JNDI、EJB、电子邮件、国际化、校验和调度功能。</li>
+<li><strong>Spring AOP</strong>：通过配置管理特性，Spring AOP 模块直接将面向切面的编程功能 , 集成到了 Spring 框架中。所以，可以很容易地使 Spring 框架管理任何支持 AOP的对象。Spring AOP 模块为基于 Spring 的应用程序中的对象提供了事务管理服务。通过使用 Spring AOP，不用依赖组件，就可以将声明性事务管理集成到应用程序中。</li>
+<li><strong>Spring DAO</strong>：JDBC DAO 抽象层提供了有意义的异常层次结构，可用该结构来管理异常处理和不同数据库供应商抛出的错误消息。异常层次结构简化了错误处理，并且极大地降低了需要编写的异常代码数量（例如打开和关闭连接）。Spring DAO 的面向 JDBC 的异常遵从通用的 DAO 异常层次结构。</li>
+<li><strong>Spring ORM</strong>：Spring 框架插入了若干个 ORM 框架，从而提供了 ORM 的对象关系工具，其中包括 JDO、Hibernate 和 iBatis SQL Map。所有这些都遵从 Spring 的通用事务和 DAO 异常层次结构。</li>
+<li><strong>Spring Web 模块</strong>：Web 上下文模块建立在应用程序上下文模块之上，为基于 Web 的应用程序提供了上下文。所以，Spring 框架支持与 Jakarta Struts 的集成。Web 模块还简化了处理多部分请求以及将请求参数绑定到域对象的工作。</li>
+<li><strong>Spring MVC 框架</strong>：MVC 框架是一个全功能的构建 Web 应用程序的 MVC 实现。通过策略接口，MVC 框架变成为高度可配置的，MVC 容纳了大量视图技术，其中包括 JSP、Velocity、Tiles、iText 和 POI。</li>
+</ul>
+<h2 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h2><img src="https://cdn.jsdelivr.net/gh/sangthian/CloudPic@master/uPic/Spring%20Boot.png" alt="SpringBoot"  />
+
+<ul>
+<li>Spring Boot：一个快速开发的脚手架<ul>
+<li>基于Spring Boot可以快速开发单个微服务</li>
+<li>约定大于配置</li>
+</ul>
+</li>
+<li>Spring Cloud<ul>
+<li>Spring Cloud基于Spring Boot来实现的</li>
+</ul>
+</li>
+<li>Spring Boot专注于快速、方便集成的单个微服务个体，Spring Cloud关注全局的服务治理框架；</li>
+<li>Spring Boot使用了约束优于配置的理念，很多集成方案已经帮你选择好了，能不配置就不配置 , Spring Cloud很大的一部分是基于Spring Boot来实现，Spring Boot可以离开Spring Cloud独立使用开发项目，但是Spring Cloud离不开Spring Boot，属于依赖的关系。</li>
+</ul>
+<p>学习Spring Boot的前提是需要完全掌握Spring及Spring MVC</p>
+<p>弊端：Spring本身发展了太久，违背了原来的理念，配置十分繁琐，但是Spring Boot很好的解决了这个问题。</p>
 ]]></content>
       <categories>
         <category>Spring</category>
@@ -329,7 +438,7 @@
   </entry>
   <entry>
     <title>Spring基础(6)-Bean的自动装配</title>
-    <url>/2020/04/11/Spring%E5%9F%BA%E7%A1%80(6)-Bean%E7%9A%84%E8%87%AA%E5%8A%A8%E8%A3%85%E9%85%8D/</url>
+    <url>/2020/04/11/Spring%E5%9F%BA%E7%A1%80-6-Bean%E7%9A%84%E8%87%AA%E5%8A%A8%E8%A3%85%E9%85%8D/</url>
     <content><![CDATA[<h2 id="XML自动装配"><a href="#XML自动装配" class="headerlink" title="XML自动装配"></a>XML自动装配</h2><p>之前在<code>beans.xml</code>文件中手动为对象赋初值的操作，就是手动装配，显然这是比较麻烦的，书写量比较大，那么我们就需要一种自动的机制来做这件事。</p>
 <p>自动装配是Spring满足bean依赖的一种方式。Spring会在上下文中自动寻找，并自动给bean装配属性。<a id="more"></a></p>
 <p>Spring中有三种装配的方式：</p>
@@ -391,47 +500,8 @@
       </tags>
   </entry>
   <entry>
-    <title>Spring基础(4)-IOC创建对象的方式</title>
-    <url>/2020/04/05/Spring%E5%9F%BA%E7%A1%80(4)-IOC%E5%88%9B%E5%BB%BA%E5%AF%B9%E8%B1%A1%E7%9A%84%E6%96%B9%E5%BC%8F/</url>
-    <content><![CDATA[<h2 id="通过无参构造函数"><a href="#通过无参构造函数" class="headerlink" title="通过无参构造函数"></a>通过无参构造函数</h2><p>Spring容器中创建对象，虽然没有显式的new，但说到底还是需要利用构造函数。如果xml配置中没有指定，那么默认通过无参构造函数进行创建，证明的示例如下：<a id="more"></a></p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Hello</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    Hello()&#123;</span><br><span class="line">        System.out.println(<span class="string">"这是无参构造方法"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> name;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setName</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">show</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"Hello,"</span> + name );</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>调用之前的测试类main函数：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyTest</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 读取xml配置文件，获取Spring的上下文对象</span></span><br><span class="line">        ApplicationContext context = <span class="keyword">new</span> ClassPathXmlApplicationContext(<span class="string">"beans.xml"</span>);</span><br><span class="line">        <span class="comment">// 在执行getBean的时候，hello对象已经创建好了，通过无参构造</span></span><br><span class="line">        Hello hello = (Hello) context.getBean(<span class="string">"hello"</span>);</span><br><span class="line">        hello.show();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// print "这是无参构造方法"</span></span><br><span class="line"><span class="comment">// print "Hello,jesse"</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="通过有参构造函数"><a href="#通过有参构造函数" class="headerlink" title="通过有参构造函数"></a>通过有参构造函数</h2><p>修改Hello类：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Hello</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    Hello(String name)&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">        System.out.println(<span class="string">"这是有参构造方法"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> name;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setName</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">show</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"Hello,"</span> + name );</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>beans.xml有三种编写方式：</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 第一种根据index参数下标设置 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"hello"</span> <span class="attr">class</span>=<span class="string">"com.mx.pojo.Hello"</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- index指构造方法,下标从0开始 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">constructor-arg</span> <span class="attr">index</span>=<span class="string">"0"</span> <span class="attr">value</span>=<span class="string">"jesse"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 第二种根据参数名字设置，推荐 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"hello"</span> <span class="attr">class</span>=<span class="string">"com.mx.pojo.Hello"</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- name指参数名 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">constructor-arg</span> <span class="attr">name</span>=<span class="string">"name"</span> <span class="attr">value</span>=<span class="string">"jesse"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 第三种根据参数类型设置 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"hello"</span> <span class="attr">class</span>=<span class="string">"com.mx.pojo.Hello"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">constructor-arg</span> <span class="attr">type</span>=<span class="string">"java.lang.String"</span> <span class="attr">value</span>=<span class="string">"jesse"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="Spring配置简单说明"><a href="#Spring配置简单说明" class="headerlink" title="Spring配置简单说明"></a>Spring配置简单说明</h2><ul>
-<li>alias</li>
-</ul>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!--别名，如果添加了别名，也可以使用它来获取这个对象--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">alias</span> <span class="attr">name</span>=<span class="string">"hello"</span> <span class="attr">alias</span>=<span class="string">"hello2"</span> /&gt;</span></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>bean</li>
-</ul>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!--id：bean的唯一标识符--&gt;</span></span><br><span class="line"><span class="comment">&lt;!--class：bean对象的全限定名：包名+类型--&gt;</span></span><br><span class="line"><span class="comment">&lt;!--name：也是别名，可以取多个，用空格、逗号或者分好分隔均可--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"hello"</span> <span class="attr">name</span>=<span class="string">"hello2 h2,h3;h4"</span> <span class="attr">class</span>=<span class="string">"com.mx.pojo.Hello"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"name"</span> <span class="attr">value</span>=<span class="string">"Spring"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>import</li>
-</ul>
-<p>一般用于团队开发使用，可将多个配置文件导入：</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">import</span> <span class="attr">resource</span>=<span class="string">"&#123;path&#125;/beans.xml"</span>/&gt;</span></span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>Spring</category>
-      </categories>
-      <tags>
-        <tag>Spring</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Spring基础(5)-依赖注入</title>
-    <url>/2020/04/11/Spring%E5%9F%BA%E7%A1%80(5)-%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5/</url>
+    <url>/2020/04/11/Spring%E5%9F%BA%E7%A1%80-5-%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5/</url>
     <content><![CDATA[<h2 id="关于依赖注入"><a href="#关于依赖注入" class="headerlink" title="关于依赖注入"></a>关于依赖注入</h2><p>依赖注入（Dependency Injection，DI），是指程序运行过程中，如果需要调用另一个java对象协助时，无须在代码中创建被调用者，而是依赖于外部的注入。</p>
 <ul>
 <li>依赖：Bean对象的创建依赖于容器 . Bean对象的依赖资源。</li>
@@ -479,65 +549,83 @@
       </tags>
   </entry>
   <entry>
-    <title>Spring基础(7)-使用注解开发</title>
-    <url>/2020/04/14/Spring%E5%9F%BA%E7%A1%80-7-%E4%BD%BF%E7%94%A8%E6%B3%A8%E8%A7%A3%E5%BC%80%E5%8F%91/</url>
-    <content><![CDATA[<h2 id="Bean的注入"><a href="#Bean的注入" class="headerlink" title="Bean的注入"></a>Bean的注入</h2><p>随着Spring技术的发展，目前已经越来越多使用注解开发，而Spring Boot更是可以做到全注解。</p>
-<p>在Spring4之后，要使用注解进行开发，必须导入aop的包，且在配置文件中需要context的约束。</p>
-<p>我们之前都是使用xml配置文件来定义bean，现在可以使用注解了。首先是配置扫描哪些包下面的注解，配置如下：<a id="more"></a></p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!--指定注解扫描包--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">context:component-scan</span> <span class="attr">base-package</span>=<span class="string">"com.mx.pojo"</span>/&gt;</span></span><br></pre></td></tr></table></figure>
+    <title>Spring基础(4)-IOC创建对象的方式</title>
+    <url>/2020/04/05/Spring%E5%9F%BA%E7%A1%80-4-IOC%E5%88%9B%E5%BB%BA%E5%AF%B9%E8%B1%A1%E7%9A%84%E6%96%B9%E5%BC%8F/</url>
+    <content><![CDATA[<h2 id="通过无参构造函数"><a href="#通过无参构造函数" class="headerlink" title="通过无参构造函数"></a>通过无参构造函数</h2><p>Spring容器中创建对象，虽然没有显式的new，但说到底还是需要利用构造函数。如果xml配置中没有指定，那么默认通过无参构造函数进行创建，证明的示例如下：<a id="more"></a></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Hello</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    Hello()&#123;</span><br><span class="line">        System.out.println(<span class="string">"这是无参构造方法"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> name;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setName</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">show</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"Hello,"</span> + name );</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>然后在指定的包下编写类，增加一个<code>@Component</code>注解：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="comment">// 相当于配置文件中 &lt;bean id="user" class="当前注解的类"/&gt;</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> String name = <span class="string">"jesse"</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>调用之前的测试类main函数：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyTest</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 读取xml配置文件，获取Spring的上下文对象</span></span><br><span class="line">        ApplicationContext context = <span class="keyword">new</span> ClassPathXmlApplicationContext(<span class="string">"beans.xml"</span>);</span><br><span class="line">        <span class="comment">// 在执行getBean的时候，hello对象已经创建好了，通过无参构造</span></span><br><span class="line">        Hello hello = (Hello) context.getBean(<span class="string">"hello"</span>);</span><br><span class="line">        hello.show();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// print "这是无参构造方法"</span></span><br><span class="line"><span class="comment">// print "Hello,jesse"</span></span><br></pre></td></tr></table></figure>
 
-<p><code>@Component</code>：关于组件的注解，放在类上，说明这个类被Spring管理了，变成了bean。</p>
-<h2 id="属性的注入"><a href="#属性的注入" class="headerlink" title="属性的注入"></a>属性的注入</h2><p>我们使用<code>@Value</code>注解来对属性进行注入。</p>
-<p>方式1：不提供set方法，直接在属性定义上添加注解：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="comment">// 相当于配置文件中 &lt;bean id="user" class="当前注解的类"/&gt;</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Value</span>(<span class="string">"jesse"</span>)</span><br><span class="line">    <span class="comment">// 相当于配置文件中 &lt;property name="name" value="jesse"/&gt;</span></span><br><span class="line">    <span class="keyword">public</span> String name;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="通过有参构造函数"><a href="#通过有参构造函数" class="headerlink" title="通过有参构造函数"></a>通过有参构造函数</h2><p>修改Hello类：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Hello</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    Hello(String name)&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">        System.out.println(<span class="string">"这是有参构造方法"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> name;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setName</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">show</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"Hello,"</span> + name );</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>方式2：如果提供了set方法，那么可以在set方法上添加注解：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> String name;</span><br><span class="line">  </span><br><span class="line">    <span class="meta">@Value</span>(<span class="string">"jesse"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setName</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>beans.xml有三种编写方式：</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 第一种根据index参数下标设置 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"hello"</span> <span class="attr">class</span>=<span class="string">"com.mx.pojo.Hello"</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- index指构造方法,下标从0开始 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">constructor-arg</span> <span class="attr">index</span>=<span class="string">"0"</span> <span class="attr">value</span>=<span class="string">"jesse"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 第二种根据参数名字设置，推荐 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"hello"</span> <span class="attr">class</span>=<span class="string">"com.mx.pojo.Hello"</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- name指参数名 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">constructor-arg</span> <span class="attr">name</span>=<span class="string">"name"</span> <span class="attr">value</span>=<span class="string">"jesse"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 第三种根据参数类型设置 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"hello"</span> <span class="attr">class</span>=<span class="string">"com.mx.pojo.Hello"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">constructor-arg</span> <span class="attr">type</span>=<span class="string">"java.lang.String"</span> <span class="attr">value</span>=<span class="string">"jesse"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
-<h2 id="衍生的注解"><a href="#衍生的注解" class="headerlink" title="衍生的注解"></a>衍生的注解</h2><p><code>@Component</code>有几个衍生的注解，在微博开发中会按照mvc三层架构进行分级，于是产生了下列的衍生注解：</p>
-<ul>
-<li><code>@Controller</code>：web层</li>
-<li><code>@Service</code>：service层</li>
-<li><code>@Repository</code>：dao层</li>
+<h2 id="Spring配置简单说明"><a href="#Spring配置简单说明" class="headerlink" title="Spring配置简单说明"></a>Spring配置简单说明</h2><ul>
+<li>alias</li>
 </ul>
-<p>这几个注解在功能上本质是一样的，都是将类交给Spring来管理，注册成为bean。分开只是为了分层管理。</p>
-<h2 id="自动装配的注解"><a href="#自动装配的注解" class="headerlink" title="自动装配的注解"></a>自动装配的注解</h2><p>也就是前面讲到的<code>@Autowired</code>，补充说下<code>@Autowired</code>的三种应用场景，分别是字段（变量）注入，构造器注入和set注入，举例如下：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 变量（filed）注入：</span></span><br><span class="line"><span class="meta">@Autowired</span></span><br><span class="line"><span class="keyword">private</span> LoginService loginService;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 构造器注入</span></span><br><span class="line"><span class="keyword">private</span> LoginService loginService;</span><br><span class="line"><span class="meta">@Autowired</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">LoginController</span> <span class="params">(LoginService loginService)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">this</span>.loginService = loginService;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// set方法注入</span></span><br><span class="line"><span class="keyword">private</span> LoginService loginService;</span><br><span class="line"><span class="meta">@Autowired</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setLoginService</span> <span class="params">(LoginService loginService)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">this</span>.loginService = loginService;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!--别名，如果添加了别名，也可以使用它来获取这个对象--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">alias</span> <span class="attr">name</span>=<span class="string">"hello"</span> <span class="attr">alias</span>=<span class="string">"hello2"</span> /&gt;</span></span><br></pre></td></tr></table></figure>
 
-<p>三者的关系和区别：</p>
 <ul>
-<li>变量注入：过于依赖注入容器了，当没有启动整个依赖容器时，这个类就不能运转，在反射时无法提供这个类需要的依赖。不推荐使用，在Idea中会提示“Field injection is not recommended”的警告</li>
-<li>构造器注入：如果注入的属性是必选的属性，则通过构造器注入。某些强制规范的类，都采用此方式。</li>
-<li>set注入：如果注入的属性是可选的属性，则通过setter方法注入。set注入的好处在于可有可无，即使没有注入这个依赖，那么也不会影响整个类的运行。</li>
+<li>bean</li>
 </ul>
-<h2 id="作用域注解"><a href="#作用域注解" class="headerlink" title="作用域注解"></a>作用域注解</h2><p>使用<code>@scope</code>注解：</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!--id：bean的唯一标识符--&gt;</span></span><br><span class="line"><span class="comment">&lt;!--class：bean对象的全限定名：包名+类型--&gt;</span></span><br><span class="line"><span class="comment">&lt;!--name：也是别名，可以取多个，用空格、逗号或者分好分隔均可--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"hello"</span> <span class="attr">name</span>=<span class="string">"hello2 h2,h3;h4"</span> <span class="attr">class</span>=<span class="string">"com.mx.pojo.Hello"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"name"</span> <span class="attr">value</span>=<span class="string">"Spring"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
 <ul>
-<li>singleton：默认，Spring会采用单例模式创建这个对象。关闭工厂 ，所有的对象都会销毁。</li>
-<li>prototype：多例模式。关闭工厂 ，所有的对象不会销毁。内部的垃圾回收机制会回收。</li>
+<li>import</li>
 </ul>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Controller</span></span><br><span class="line"><span class="meta">@Scope</span>(<span class="string">"prototype"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Value</span>(<span class="string">"jesse"</span>)</span><br><span class="line">    <span class="keyword">public</span> String name;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>一般用于团队开发使用，可将多个配置文件导入：</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">import</span> <span class="attr">resource</span>=<span class="string">"&#123;path&#125;/beans.xml"</span>/&gt;</span></span><br></pre></td></tr></table></figure>
 
-<h2 id="使用Java类进行配置"><a href="#使用Java类进行配置" class="headerlink" title="使用Java类进行配置"></a>使用Java类进行配置</h2><p>现在完全不使用Spring的xml来进行配置，全部交给Java来做。利用Spring的子项目JavaConfig来做。</p>
-<p>新建pojo类<code>com.mx.pojo.User</code>：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 说明这个类被Spring接管了，注册到了容器中</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 属性注入值</span></span><br><span class="line">    <span class="meta">@Value</span>(<span class="string">"jesse"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setName</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>Spring</category>
+      </categories>
+      <tags>
+        <tag>Spring</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Spring基础(3)-第一个Spring Demo</title>
+    <url>/2020/04/05/Spring%E5%9F%BA%E7%A1%80-3-%E7%AC%AC%E4%B8%80%E4%B8%AASpring-Demo/</url>
+    <content><![CDATA[<h2 id="Spring-Demo"><a href="#Spring-Demo" class="headerlink" title="Spring Demo"></a>Spring Demo</h2><p>利用maven新建一个空的项目，然后逐步添加Spring相关代码，以最简单的Demo理解Spring的IOC原理。</p>
+<p>添加maven依赖：<a id="more"></a></p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-webmvc<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">version</span>&gt;</span>5.1.10.RELEASE<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
-<p>新建配置类<code>com.mx.config.AppConfig</code>：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 这个也会被Spring容器托管，注册到容器中</span></span><br><span class="line"><span class="comment">// 本质上是一个@Component，@Configuration代表这个是配置类，和beans.xml起的作用是一致的</span></span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@ComponentScan</span>(<span class="string">"com.mx.pojo"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AppConfig</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 注册一个Bean，相当于xml中的bean标签</span></span><br><span class="line">    <span class="comment">// 方法的名字，相当于bean标签中的id属性</span></span><br><span class="line">    <span class="comment">// 方法的返回值，相当于bean标签的class属性</span></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> User <span class="title">getUser</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> User();  <span class="comment">// 返回注入的bean</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>创建<code>com.mx.pojo.Hello</code>类：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Hello</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> name;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setName</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">show</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"Hello,"</span> + name );</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>编写测试类：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyTest</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        ApplicationContext context = <span class="keyword">new</span> AnnotationConfigApplicationContext(AppConfig<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">        User user = context.getBean(<span class="string">"getUser"</span>, User<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">        System.out.println(user.getName());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// print "jesse"</span></span><br></pre></td></tr></table></figure>
+<p>编写<code>resources.beans.xml</code>配置文件:</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">beans</span> <span class="attr">xmlns</span>=<span class="string">"http://www.springframework.org/schema/beans"</span></span></span><br><span class="line"><span class="tag">       <span class="attr">xmlns:xsi</span>=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span></span></span><br><span class="line"><span class="tag">       <span class="attr">xsi:schemaLocation</span>=<span class="string">"http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!--使用Spring来创建对象，在Spring中这些对象都称之为Bean--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"hello"</span> <span class="attr">class</span>=<span class="string">"com.mx.pojo.Hello"</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!--类中的属性成员，可以赋初值，通过setter方法--&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"name"</span> <span class="attr">value</span>=<span class="string">"jesse"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">beans</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
-<p>再补充下，导入其他配置的做法：再次编写一个配置类：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Configuration</span>  </span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AppConfig2</span> </span>&#123;</span><br><span class="line">  ... </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>编写测试类<code>test.MyTest</code>：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyTest</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 读取xml配置文件，获取Spring的上下文对象</span></span><br><span class="line">        ApplicationContext context = <span class="keyword">new</span> ClassPathXmlApplicationContext(<span class="string">"beans.xml"</span>);</span><br><span class="line">        <span class="comment">// 根据bean的id选取，获得对象实例</span></span><br><span class="line">        Hello hello = (Hello) context.getBean(<span class="string">"hello"</span>);</span><br><span class="line">        hello.show();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// print "Hello,jesse"</span></span><br></pre></td></tr></table></figure>
 
-<p>导入这个配置类</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@Import</span>(AppConfig2<span class="class">.<span class="keyword">class</span>)  //导入合并其他配置类，类似于配置文件中的<span class="title">inculde</span>标签</span></span><br><span class="line"><span class="class"><span class="title">public</span> <span class="title">class</span> <span class="title">AppConfig</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Dog <span class="title">dog</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> Dog();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>ClassPathXmlApplicationContext</code>和<code>ApplicationContext</code>存在N次继承关系，是利用多态的向上转型，从类名中可以探知，获取上下文对象的方式除了xml配置之外，还有其他的，比如注解、文件等。</p>
+<h2 id="问题思考"><a href="#问题思考" class="headerlink" title="问题思考"></a>问题思考</h2><ul>
+<li><p>hello对象是谁创建的？</p>
+<ul>
+<li>hello对象是由Spring创建的，程序中没有new</li>
+</ul>
+</li>
+<li><p>hello对象的属性是怎么设置的？   </p>
+<ul>
+<li>hello对象的属性是由Spring容器设置的</li>
+</ul>
+</li>
+</ul>
+<p>这个过程就叫做控制反转：</p>
+<ul>
+<li>控制：谁来控制对象的创建，在使用Spring之后，对象是由Spring来创建</li>
+<li>反转：程序本身不创建对象，变成被动的接受对象</li>
+<li>依赖注入：利用set方法进行注入</li>
+</ul>
+<p>因此对于初级的Spring程序，要实现不同的操作，只需要在xml配置文件中进行修改，IoC的也就成了：对象由Spring来创建、管理和装配！</p>
+<h2 id="案例进阶"><a href="#案例进阶" class="headerlink" title="案例进阶"></a>案例进阶</h2><p>利用ref，引用Spring中创建好的bean对象：</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">beans</span> <span class="attr">xmlns</span>=<span class="string">"http://www.springframework.org/schema/beans"</span></span></span><br><span class="line"><span class="tag">       <span class="attr">xmlns:xsi</span>=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span></span></span><br><span class="line"><span class="tag">       <span class="attr">xsi:schemaLocation</span>=<span class="string">"http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"mySqlImpl"</span> <span class="attr">class</span>=<span class="string">"com.mx.dao.UserDaoMySqlImpl"</span> /&gt;</span></span><br><span class="line">    </span><br><span class="line">    <span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"UserServiceImpl"</span> <span class="attr">class</span>=<span class="string">"com.mx.service.UserServiceImpl"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"userDao"</span> <span class="attr">ref</span>=<span class="string">"mySqlImpl"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">beans</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
-<p>此处例子比较简单，更多的内容需要去官方文档查看。</p>
-<p>全注解开发是Spring Boot的精髓之一，之后的学习需要更多了解这方面内容。</p>
 ]]></content>
       <categories>
         <category>Spring</category>
