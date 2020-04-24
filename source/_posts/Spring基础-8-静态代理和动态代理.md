@@ -8,12 +8,12 @@ tags:
 
 ## 代理模式
 
-为什么我们要接触学习代理模式，因为这是Spring AOP的低层原理。
+为什么我们要接触学习代理模式，因为这是Spring AOP的底层原理。
 
 代理模式的分类：
 
 - 静态代理
-- 动态代理
+- 动态代理<!-- more -->
 
 ![代理模式](https://cdn.jsdelivr.net/gh/sangthian/CloudPic@master/uPic/代理模式.png)
 
