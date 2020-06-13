@@ -8,7 +8,7 @@ tags:
 
 ## 关于AOP
 
-AOP（Aspect Oriented Programming），即面向切面编程，可以说是OOP（Object Oriented Programming，面向对象编程）的补充和完善。通过预编译方式和运行时动态代理实现程序功能的统一维护的一种技术，利用AOP可以对业务逻辑的各个部分进行隔离，从而使得业务逻辑各部分之间的耦合降低。
+AOP（Aspect Oriented Programming），即面向切面编程，可以说是OOP（Object Oriented Programming，面向对象编程）的补充和完善。通过预编译方式和运行时动态代理实现程序功能的统一维护的一种技术，利用AOP可以对业务逻辑的各个部分进行隔离，从而使得业务逻辑各部分之间的耦合降低。<!--more-->
 
 ![Program_Execution](https://cdn.jsdelivr.net/gh/sangthian/CloudPic@master/uPic/Program_Execution.jpg)
 
