@@ -20,17 +20,20 @@
     var CONFIG = {"hostname":"sangthian.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="本文是MySQL实战45讲的个人总结笔记，将讲义中自己觉得比较精华的部分记录下来，提供日后参考和复盘。 01讲基础架构：一条SQL查询语句是如何执行的MySQL底层基本架构  Server层 连接器：负责跟客户端建立连接、获取权限、维持和管理连接 查询缓存：保存之前的查询结果，key-value格式，命中能直接返回 分析器：词法分析+语法分析 优化器：选择合适索引，决定join顺序等 执行器：执行">
+  <meta name="description" content="MySQL 是最流行的关系型数据库管理系统，在 WEB 应用方面 MySQL 是最好的 RDBMS(Relational Database Management System：关系数据库管理系统)应用软件之一。 本文是MySQL实战45讲的个人总结笔记，将讲义中自己觉得比较精华的部分记录下来，提供日后参考和复盘。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="MySQL实战45讲笔记">
 <meta property="og:url" content="https://sangthian.github.io/2020/08/16/MySQL%E5%AE%9E%E6%88%9845%E8%AE%B2%E7%AC%94%E8%AE%B0/index.html">
 <meta property="og:site_name" content="sangthian">
-<meta property="og:description" content="本文是MySQL实战45讲的个人总结笔记，将讲义中自己觉得比较精华的部分记录下来，提供日后参考和复盘。 01讲基础架构：一条SQL查询语句是如何执行的MySQL底层基本架构  Server层 连接器：负责跟客户端建立连接、获取权限、维持和管理连接 查询缓存：保存之前的查询结果，key-value格式，命中能直接返回 分析器：词法分析+语法分析 优化器：选择合适索引，决定join顺序等 执行器：执行">
+<meta property="og:description" content="MySQL 是最流行的关系型数据库管理系统，在 WEB 应用方面 MySQL 是最好的 RDBMS(Relational Database Management System：关系数据库管理系统)应用软件之一。 本文是MySQL实战45讲的个人总结笔记，将讲义中自己觉得比较精华的部分记录下来，提供日后参考和复盘。">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/sangthian/CloudPic@master/uPic/MySQL%E5%9F%BA%E6%9C%AC%E6%9E%B6%E6%9E%84.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/sangthian/CloudPic@master/uPic/%E5%93%88%E5%B8%8C%E8%A1%A8%E7%A4%BA%E6%84%8F%E5%9B%BE.png">
 <meta property="article:published_time" content="2020-08-16T03:37:42.000Z">
-<meta property="article:modified_time" content="2020-08-16T03:40:23.403Z">
+<meta property="article:modified_time" content="2020-08-16T04:06:11.339Z">
 <meta property="article:author" content="Jesse Mx">
 <meta property="article:tag" content="MySQL">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/sangthian/CloudPic@master/uPic/MySQL%E5%9F%BA%E6%9C%AC%E6%9E%B6%E6%9E%84.png">
 
 <link rel="canonical" href="https://sangthian.github.io/2020/08/16/MySQL%E5%AE%9E%E6%88%9845%E8%AE%B2%E7%AC%94%E8%AE%B0/">
 
@@ -212,7 +215,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2020-08-16 11:37:42 / 修改时间：11:40:23" itemprop="dateCreated datePublished" datetime="2020-08-16T11:37:42+08:00">2020-08-16</time>
+              <time title="创建时间：2020-08-16 11:37:42 / 修改时间：12:06:11" itemprop="dateCreated datePublished" datetime="2020-08-16T11:37:42+08:00">2020-08-16</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -242,8 +245,10 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>本文是<a href="https://time.geekbang.org/column/intro/139" target="_blank" rel="noopener">MySQL实战45讲</a>的个人总结笔记，将讲义中自己觉得比较精华的部分记录下来，提供日后参考和复盘。</p>
+        <p>MySQL 是最流行的关系型数据库管理系统，在 WEB 应用方面 MySQL 是最好的 RDBMS(Relational Database Management System：关系数据库管理系统)应用软件之一。</p>
+<p>本文是<a href="https://time.geekbang.org/column/intro/139" target="_blank" rel="noopener">MySQL实战45讲</a>的个人总结笔记，将讲义中自己觉得比较精华的部分记录下来，提供日后参考和复盘。<a id="more"></a></p>
 <h2 id="01讲基础架构：一条SQL查询语句是如何执行的"><a href="#01讲基础架构：一条SQL查询语句是如何执行的" class="headerlink" title="01讲基础架构：一条SQL查询语句是如何执行的"></a>01讲基础架构：一条SQL查询语句是如何执行的</h2><p>MySQL底层基本架构</p>
+<p><img src="https://cdn.jsdelivr.net/gh/sangthian/CloudPic@master/uPic/MySQL%E5%9F%BA%E6%9C%AC%E6%9E%B6%E6%9E%84.png" alt="MySQL基本架构"></p>
 <ul>
 <li>Server层<ul>
 <li>连接器：负责跟客户端建立连接、获取权限、维持和管理连接</li>
@@ -308,6 +313,25 @@
 <li>脏读：一个事务读取到了另一个事务尚未提交的数据（只有读未提交才可能引发）</li>
 <li>不可重复读：事务A修改了数据，导致事务B多次读取的记录不一致（读未提交和读已提交可能引发）</li>
 <li>幻读：事务A插入或者删除记录，导致事务B多次读取的记录数量不一致（只有加锁才能避免，因此除了串行化，其他皆有可能引发）</li>
+</ul>
+<h2 id="04讲深入浅出索引（上）"><a href="#04讲深入浅出索引（上）" class="headerlink" title="04讲深入浅出索引（上）"></a>04讲深入浅出索引（上）</h2><p>索引：就像书的目录一样，为了提高数据查询的效率而出现的数据结构。</p>
+<p>三种常见的索引模型：</p>
+<ul>
+<li><p>哈希表</p>
+<ul>
+<li>哈希表是一种以键-值（key-value）存储数据的结构，输入待查找的key，就可以找到其对应的value</li>
+<li>实现思路：把值放在数组里，用一个哈希函数把key换算成一个确定的位置，然后把value放在数组的这个位置</li>
+<li>会出现多个key对应同一个value的情况，解决方法：使用链表，当key1和key2都命中value1的时候，通过链表顺序遍历，找到key1对应的确定元素</li>
+<li>优点：<strong>哈希表这种结构适用于只有等值查询的场景</strong>，速度很快</li>
+<li>缺点：数据存储不是有序的，所以哈希索引做区间查询的速度很慢</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/sangthian/CloudPic@master/uPic/%E5%93%88%E5%B8%8C%E8%A1%A8%E7%A4%BA%E6%84%8F%E5%9B%BE.png" alt="哈希表示意图"></p>
+</li>
+<li><p>有序数组</p>
+<ul>
+<li></li>
+</ul>
+</li>
 </ul>
 
     </div>
@@ -389,7 +413,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#01讲基础架构：一条SQL查询语句是如何执行的"><span class="nav-number">1.</span> <span class="nav-text">01讲基础架构：一条SQL查询语句是如何执行的</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#02讲日志系统：一条SQL更新语句是如何执行的"><span class="nav-number">2.</span> <span class="nav-text">02讲日志系统：一条SQL更新语句是如何执行的</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#03讲事务隔离：为什么你改了我还看不见"><span class="nav-number">3.</span> <span class="nav-text">03讲事务隔离：为什么你改了我还看不见</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#01讲基础架构：一条SQL查询语句是如何执行的"><span class="nav-number">1.</span> <span class="nav-text">01讲基础架构：一条SQL查询语句是如何执行的</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#02讲日志系统：一条SQL更新语句是如何执行的"><span class="nav-number">2.</span> <span class="nav-text">02讲日志系统：一条SQL更新语句是如何执行的</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#03讲事务隔离：为什么你改了我还看不见"><span class="nav-number">3.</span> <span class="nav-text">03讲事务隔离：为什么你改了我还看不见</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#04讲深入浅出索引（上）"><span class="nav-number">4.</span> <span class="nav-text">04讲深入浅出索引（上）</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 

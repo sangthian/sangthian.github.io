@@ -1125,8 +1125,10 @@
   <entry>
     <title>MySQL实战45讲笔记</title>
     <url>/2020/08/16/MySQL%E5%AE%9E%E6%88%9845%E8%AE%B2%E7%AC%94%E8%AE%B0/</url>
-    <content><![CDATA[<p>本文是<a href="https://time.geekbang.org/column/intro/139" target="_blank" rel="noopener">MySQL实战45讲</a>的个人总结笔记，将讲义中自己觉得比较精华的部分记录下来，提供日后参考和复盘。</p>
+    <content><![CDATA[<p>MySQL 是最流行的关系型数据库管理系统，在 WEB 应用方面 MySQL 是最好的 RDBMS(Relational Database Management System：关系数据库管理系统)应用软件之一。</p>
+<p>本文是<a href="https://time.geekbang.org/column/intro/139" target="_blank" rel="noopener">MySQL实战45讲</a>的个人总结笔记，将讲义中自己觉得比较精华的部分记录下来，提供日后参考和复盘。<a id="more"></a></p>
 <h2 id="01讲基础架构：一条SQL查询语句是如何执行的"><a href="#01讲基础架构：一条SQL查询语句是如何执行的" class="headerlink" title="01讲基础架构：一条SQL查询语句是如何执行的"></a>01讲基础架构：一条SQL查询语句是如何执行的</h2><p>MySQL底层基本架构</p>
+<p><img src="https://cdn.jsdelivr.net/gh/sangthian/CloudPic@master/uPic/MySQL%E5%9F%BA%E6%9C%AC%E6%9E%B6%E6%9E%84.png" alt="MySQL基本架构"></p>
 <ul>
 <li>Server层<ul>
 <li>连接器：负责跟客户端建立连接、获取权限、维持和管理连接</li>
@@ -1191,6 +1193,25 @@
 <li>脏读：一个事务读取到了另一个事务尚未提交的数据（只有读未提交才可能引发）</li>
 <li>不可重复读：事务A修改了数据，导致事务B多次读取的记录不一致（读未提交和读已提交可能引发）</li>
 <li>幻读：事务A插入或者删除记录，导致事务B多次读取的记录数量不一致（只有加锁才能避免，因此除了串行化，其他皆有可能引发）</li>
+</ul>
+<h2 id="04讲深入浅出索引（上）"><a href="#04讲深入浅出索引（上）" class="headerlink" title="04讲深入浅出索引（上）"></a>04讲深入浅出索引（上）</h2><p>索引：就像书的目录一样，为了提高数据查询的效率而出现的数据结构。</p>
+<p>三种常见的索引模型：</p>
+<ul>
+<li><p>哈希表</p>
+<ul>
+<li>哈希表是一种以键-值（key-value）存储数据的结构，输入待查找的key，就可以找到其对应的value</li>
+<li>实现思路：把值放在数组里，用一个哈希函数把key换算成一个确定的位置，然后把value放在数组的这个位置</li>
+<li>会出现多个key对应同一个value的情况，解决方法：使用链表，当key1和key2都命中value1的时候，通过链表顺序遍历，找到key1对应的确定元素</li>
+<li>优点：<strong>哈希表这种结构适用于只有等值查询的场景</strong>，速度很快</li>
+<li>缺点：数据存储不是有序的，所以哈希索引做区间查询的速度很慢</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/sangthian/CloudPic@master/uPic/%E5%93%88%E5%B8%8C%E8%A1%A8%E7%A4%BA%E6%84%8F%E5%9B%BE.png" alt="哈希表示意图"></p>
+</li>
+<li><p>有序数组</p>
+<ul>
+<li></li>
+</ul>
+</li>
 </ul>
 ]]></content>
       <categories>
