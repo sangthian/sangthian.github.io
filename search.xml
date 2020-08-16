@@ -1127,7 +1127,9 @@
     <url>/2020/08/16/MySQL%E5%AE%9E%E6%88%9845%E8%AE%B2%E7%AC%94%E8%AE%B0/</url>
     <content><![CDATA[<p>MySQL 是最流行的关系型数据库管理系统，在 WEB 应用方面 MySQL 是最好的 RDBMS(Relational Database Management System：关系数据库管理系统)应用软件之一。</p>
 <p>本文是<a href="https://time.geekbang.org/column/intro/139" target="_blank" rel="noopener">MySQL实战45讲</a>的个人总结笔记，将讲义中自己觉得比较精华的部分记录下来，提供日后参考和复盘。<a id="more"></a></p>
-<h2 id="01讲基础架构：一条SQL查询语句是如何执行的"><a href="#01讲基础架构：一条SQL查询语句是如何执行的" class="headerlink" title="01讲基础架构：一条SQL查询语句是如何执行的"></a>01讲基础架构：一条SQL查询语句是如何执行的</h2><p>MySQL底层基本架构</p>
+<h2 id="01讲基础架构：一条SQL查询语句是如何执行的"><a href="#01讲基础架构：一条SQL查询语句是如何执行的" class="headerlink" title="01讲基础架构：一条SQL查询语句是如何执行的"></a>01讲基础架构：一条SQL查询语句是如何执行的</h2><blockquote>
+<p>MySQL底层基本架构：</p>
+</blockquote>
 <p><img src="https://cdn.jsdelivr.net/gh/sangthian/CloudPic@master/uPic/MySQL%E5%9F%BA%E6%9C%AC%E6%9E%B6%E6%9E%84.png" alt="MySQL基本架构"></p>
 <ul>
 <li>Server层<ul>
@@ -1146,13 +1148,17 @@
 </ul>
 <h2 id="02讲日志系统：一条SQL更新语句是如何执行的"><a href="#02讲日志系统：一条SQL更新语句是如何执行的" class="headerlink" title="02讲日志系统：一条SQL更新语句是如何执行的"></a>02讲日志系统：一条SQL更新语句是如何执行的</h2><p>update语句首先会找到符合条件的行，这个步骤和select的执行流程一样。</p>
 <p>WAL（Writer-Ahead Logging）技术：先写日志，再写磁盘。当有记录需更新，InnoDB引起先将记录写入redo log，并更新内存，然后在适当的时候再更新到磁盘做持久化。</p>
+<blockquote>
 <p>redo log（InnoDB引擎日志）：</p>
+</blockquote>
 <ul>
 <li>write pos：当前正在写入的位置</li>
 <li>checkpoint：当前正在擦除（持久化）的位置，从write pos到checkpoint之间的位置，即为空白区，可以写入</li>
 <li>crash-safe：数据库即使重启，因为有了redo log，之前提交的记录都不会丢失</li>
 </ul>
+<blockquote>
 <p>binlog（Server层日志）：</p>
+</blockquote>
 <ul>
 <li>只能用于归档，没有crash-safe能力</li>
 <li>和redo log的区别<ul>
@@ -1162,7 +1168,9 @@
 </ul>
 </li>
 </ul>
+<blockquote>
 <p>两阶段提交：</p>
+</blockquote>
 <ul>
 <li>先写入redo log，状态处于prepare</li>
 <li>写入binlog到磁盘</li>
@@ -1176,26 +1184,34 @@
 <li>binlog无记录，redo log无记录：说明在redo log之前就crash，恢复操作：回滚事务</li>
 </ul>
 <p>把binlog夹在redo log之间做提交，这样可以根据二者状态，准确进行crash后的恢复</p>
-<h2 id="03讲事务隔离：为什么你改了我还看不见"><a href="#03讲事务隔离：为什么你改了我还看不见" class="headerlink" title="03讲事务隔离：为什么你改了我还看不见"></a>03讲事务隔离：为什么你改了我还看不见</h2><p>事务：</p>
+<h2 id="03讲事务隔离：为什么你改了我还看不见"><a href="#03讲事务隔离：为什么你改了我还看不见" class="headerlink" title="03讲事务隔离：为什么你改了我还看不见"></a>03讲事务隔离：为什么你改了我还看不见</h2><blockquote>
+<p>事务：</p>
+</blockquote>
 <ul>
 <li>保证一组数据库操作，要么全部成功，要么全部失败</li>
 <li>事务是在引擎层实现的，MyISAM就不支持事务，而InnoDB正好支持</li>
 </ul>
+<blockquote>
 <p>数据库事务隔离级别：</p>
+</blockquote>
 <ul>
 <li>读未提交：事务中的修改，即使没有提交，其他事务也可以看得到</li>
 <li>读已提交：事务中的修改只有提交以后才能被其它事务看到</li>
 <li>可重复读：在事务中看到的每行的记录的结果是一致的</li>
 <li>串行化：所有的事务都是串行执行的，一个事务执行完了才能执行其它的事务，可以解决所有的并发问题，它是靠大量加锁实现的</li>
 </ul>
+<blockquote>
 <p>常见并发问题：</p>
+</blockquote>
 <ul>
 <li>脏读：一个事务读取到了另一个事务尚未提交的数据（只有读未提交才可能引发）</li>
 <li>不可重复读：事务A修改了数据，导致事务B多次读取的记录不一致（读未提交和读已提交可能引发）</li>
 <li>幻读：事务A插入或者删除记录，导致事务B多次读取的记录数量不一致（只有加锁才能避免，因此除了串行化，其他皆有可能引发）</li>
 </ul>
 <h2 id="04讲深入浅出索引（上）"><a href="#04讲深入浅出索引（上）" class="headerlink" title="04讲深入浅出索引（上）"></a>04讲深入浅出索引（上）</h2><p>索引：就像书的目录一样，为了提高数据查询的效率而出现的数据结构。</p>
+<blockquote>
 <p>三种常见的索引模型：</p>
+</blockquote>
 <ul>
 <li><p>哈希表</p>
 <ul>
@@ -1209,9 +1225,60 @@
 </li>
 <li><p>有序数组</p>
 <ul>
-<li></li>
+<li>有序数组根据主键ID进行顺序存储</li>
+<li>优点：等值查询（利用二分法）和范围查询性能都很优秀</li>
+<li>缺点：更新数据很麻烦，需要移动的数据量太大，<strong>只适用于作为静态存储引擎</strong></li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/sangthian/CloudPic@master/uPic/%E6%9C%89%E5%BA%8F%E6%95%B0%E7%BB%84%E7%A4%BA%E6%84%8F%E5%9B%BE.png" alt="有序数组示意图"></p>
+</li>
+<li><p>二叉搜索树</p>
+<ul>
+<li>二叉搜索树：每个节点的左儿子小于父节点，父节点又小于右儿子。精确搜索的时间复杂度是O(log(N))。</li>
+<li>主要问题：二叉搜索树分的太细，导致数据块较多，从而读取磁盘的次数变多，对于数据量大的表查询，实际查询时间不一定快的起来。</li>
+<li>为了让一个查询尽量少地读磁盘，就必须让查询过程访问尽量少的数据块，要使用“N叉”树，这里“N叉”树中的“N”取决于数据块的大小。（InnoDB的一个整数字段索引为例，这个N差不多是1200）</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/sangthian/CloudPic@master/uPic/%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%E7%A4%BA%E6%84%8F%E5%9B%BE.png" alt="二叉搜索树示意图"></p>
+</li>
+</ul>
+<blockquote>
+<p>为了更好理解InnoDB引擎，这里必须插播关于B+树的基本介绍，后面会专门写文理解：</p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/sangthian/CloudPic@master/uPic/B+%E6%A0%91%E7%BB%93%E6%9E%84.jpg" alt="B+树结构"></p>
+<p>B+树的特征：</p>
+<ul>
+<li><p>有k个子树的中间节点包含有k个元素（B树中是k-1个元素），每个元素不保存数据，只用来索引，所有数据都保存在叶子节点。</p>
+</li>
+<li><p>所有的叶子结点中包含了全部元素的信息，及指向含这些元素记录的指针，且叶子结点本身依关键字的大小自小而大顺序链接。</p>
+</li>
+<li><p>所有的中间节点元素都同时存在于子节点，在子节点元素中是最大（或最小）元素。</p>
+</li>
+</ul>
+<p>B+树的优势：</p>
+<ul>
+<li><p>单一节点存储更多的元素，使得查询的IO次数更少。</p>
+</li>
+<li><p>所有查询都要查找到叶子节点，查询性能稳定。</p>
+</li>
+<li><p>所有叶子节点形成有序链表，便于范围查询。</p>
+</li>
+</ul>
+<blockquote>
+<p>InnoDB的索引模型</p>
+</blockquote>
+<ul>
+<li>在InnoDB中，表都是根据主键顺序以索引的形式存放的，这种存储方式的表称为索引组织表</li>
+<li>每一个索引在InnoDB里面对应一棵B+树</li>
+<li>根据叶子节点内容，分为主键索引和非主键索引：<ul>
+<li>主键索引：叶子节点存储整行数据</li>
+<li>非主键索引：叶子结点存储主键的值（查其他字段数据则需要再到主键索引树找一遍，称之为回表）</li>
 </ul>
 </li>
+<li>索引的维护：<ul>
+<li>普通索引的增删涉及到页的合并和分裂，原因是ID的不连续（在树的中间进行增删操作）</li>
+<li>如果使用自增主键，那么每次插入一条新记录，都是追加操作，都不涉及到挪动其他记录，也不会触发叶子节点的分裂</li>
+</ul>
+</li>
+<li>主键的选取：业务允许尽量使用自增主键，好处在于好维护和占用空间少（非主键索引能减少叶子节点的存储空间）</li>
 </ul>
 ]]></content>
       <categories>
