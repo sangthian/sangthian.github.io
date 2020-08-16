@@ -1,8 +1,9 @@
 ---
 title: Spring Boot运行原理简介
 date: 2020-08-15 15:39:25
-categories: spring
-tags: -spring
+categories: Spring
+tags: 
+ - Spring
 ---
 
 ## Maven依赖
